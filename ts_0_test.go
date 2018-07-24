@@ -6,6 +6,7 @@ import (
 	"github.com/intdxdt/mbr"
 	"github.com/franela/goblin"
 	"time"
+	"github.com/TopoSimplify/node"
 )
 
 type Boxes []mbr.MBR
@@ -40,7 +41,7 @@ func someData(n int) []mbr.MBR {
 	return data
 }
 
-func testResults(g *goblin.G, objects []*Obj, boxes Boxes) {
+func testResults(g *goblin.G, objects []*node.Node, boxes Boxes) {
 	var results = make([]mbr.MBR, 0, len(objects))
 	for i := range objects {
 		results = append(results, objects[i].MBR)
@@ -54,8 +55,8 @@ func testResults(g *goblin.G, objects []*Obj, boxes Boxes) {
 	}
 }
 
-func getObjs(nodes []dbNode) []*Obj {
-	var objs = make([]*Obj, 0, len(nodes))
+func getObjs(nodes []dbNode) []*node.Node {
+	var objs = make([]*node.Node, 0, len(nodes))
 	for _, o := range nodes {
 		objs = append(objs, o.item)
 	}
@@ -113,13 +114,13 @@ func TestRtreeRbush(t *testing.T) {
 			var tree = NewRTree(8).LoadBoxes(data)
 			tree.LoadBoxes(data[0:3])
 			var tree2 = NewRTree(8).LoadBoxes(data).Insert(
-				&Obj{Id: 0, MBR: data[0]},
-			).Insert(&Obj{Id: 1, MBR: data[1]}).Insert(&Obj{Id: 2, MBR: data[2]})
+				&node.Node{Id: 0, MBR: data[0]},
+			).Insert(&node.Node{Id: 1, MBR: data[1]}).Insert(&node.Node{Id: 2, MBR: data[2]})
 			g.Assert(tree.Data).Eql(tree2.Data)
 		})
 
 		g.It("#load does nothing if loading empty data", func() {
-			var tree = NewRTree(0).Load(make([]*Obj, 0))
+			var tree = NewRTree(0).Load(make([]*node.Node, 0))
 			g.Assert(tree.IsEmpty()).IsTrue()
 		})
 
@@ -207,7 +208,7 @@ func TestRtreeRbush(t *testing.T) {
 			var data = []mbr.MBR{{0, 0, 0, 0}, {2, 2, 2, 2}, {1, 1, 1, 1},}
 			var tree = NewRTree(4)
 			tree.LoadBoxes(data)
-			tree.Insert(Object(0, mbr.CreateMBR(3, 3, 3, 3)))
+			tree.Insert(&node.Node{MBR: mbr.CreateMBR(3, 3, 3, 3)})
 			g.Assert(tree.Data.leaf).IsTrue()
 			g.Assert(tree.Data.height).Equal(1)
 			var box = mbr.CreateMBR(0, 0, 3, 3)
@@ -218,7 +219,7 @@ func TestRtreeRbush(t *testing.T) {
 		})
 
 		g.It("#insert does nothing if given nil", func() {
-			var o *Obj
+			var o *node.Node
 			var tree = NewRTree(4).LoadBoxes(data)
 			g.Assert(tree.Data).Eql(NewRTree(4).LoadBoxes(data).Insert(o).Data)
 		})
@@ -226,7 +227,7 @@ func TestRtreeRbush(t *testing.T) {
 		g.It("#insert forms a valid tree if items are inserted one by one", func() {
 			var tree = NewRTree(4)
 			for i := 0; i < len(data); i++ {
-				tree.Insert(Object(i, data[i]))
+				tree.Insert(&node.Node{MBR: data[i]})
 			}
 
 			var tree2 = NewRTree(4).LoadBoxes(data)
@@ -260,11 +261,11 @@ func TestRtreeRbush(t *testing.T) {
 		})
 
 		g.It("#remove does nothing if nothing found", func() {
-			var item *Obj
+			var item *node.Node
 			var tree = NewRTree(0).LoadBoxes(data)
 			var tree2 = NewRTree(0).LoadBoxes(data)
 			var query = mbr.CreateMBR(13, 13, 13, 13)
-			var querybox = Object(0, mbr.CreateMBR(13, 13, 13, 13))
+			var querybox = &node.Node{MBR: mbr.CreateMBR(13, 13, 13, 13)}
 			g.Assert(tree.Data).Eql(tree2.RemoveMBR(&query).Data)
 			g.Assert(tree.Data).Eql(tree2.RemoveObj(querybox).Data)
 			g.Assert(tree.Data).Eql(tree2.RemoveObj(item).Data)
@@ -276,7 +277,7 @@ func TestRtreeRbush(t *testing.T) {
 			for i := 0; i < len(result); i++ {
 				tree.RemoveObj(result[i])
 			}
-			g.Assert(tree.RemoveObj(&Obj{}).IsEmpty()).IsTrue()
+			g.Assert(tree.RemoveObj(&node.Node{}).IsEmpty()).IsTrue()
 		})
 
 		g.It("#clear should clear all the data in the tree", func() {
@@ -286,7 +287,7 @@ func TestRtreeRbush(t *testing.T) {
 
 		g.It("should have chainable API", func() {
 			g.Assert(NewRTree(4).LoadBoxes(data).Insert(
-				Object(0, data[0]),
+				&node.Node{MBR: data[0]},
 			).RemoveMBR(&data[0]).Clear().IsEmpty()).IsTrue()
 		})
 	})
@@ -302,9 +303,9 @@ func TestRtreeUtil(t *testing.T) {
 	g.Describe("hdb Util", func() {
 		g.It("tests pop nodes", func() {
 			g.Timeout(1 * time.Hour)
-			var a = newNode(Object(0, emptyMBR()), 0, true, nil)
-			var b = newNode(Object(0, emptyMBR()), 1, true, nil)
-			var c = newNode(Object(0, emptyMBR()), 1, true, nil)
+			var a = newNode(&node.Node{MBR:emptyMBR()}, 0, true, nil)
+			var b = newNode(&node.Node{MBR:emptyMBR()}, 1, true, nil)
+			var c = newNode(&node.Node{MBR:emptyMBR()}, 1, true, nil)
 			var nodes = make([]*dbNode, 0)
 			var n *dbNode
 

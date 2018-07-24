@@ -1,6 +1,9 @@
 package hdb
 
-import "github.com/intdxdt/mbr"
+import (
+	"github.com/intdxdt/mbr"
+	"github.com/TopoSimplify/node"
+)
 
 func nodeAtIndex(a []*dbNode, i int) *dbNode {
 	var n = len(a)
@@ -80,8 +83,8 @@ func (tree *hdb) condense(path []*dbNode) {
 
 //Remove Item from hdb
 //NOTE:if item is a bbox , then first found bbox is removed
-func (tree *hdb) RemoveObj(item *Obj) *hdb {
-	if (item == nil) {
+func (tree *hdb) RemoveObj(item *node.Node) *hdb {
+	if item == nil {
 		return tree
 	}
 	tree.removeItem(&item.MBR,

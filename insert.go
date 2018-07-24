@@ -2,10 +2,11 @@ package hdb
 
 import (
 	"github.com/intdxdt/mbr"
+	"github.com/TopoSimplify/node"
 )
 
 //Insert item
-func (tree *hdb) Insert(item *Obj) *hdb {
+func (tree *hdb) Insert(item *node.Node) *hdb {
 	if item == nil {
 		return tree
 	}
@@ -14,7 +15,7 @@ func (tree *hdb) Insert(item *Obj) *hdb {
 }
 
 //insert - private
-func (tree *hdb) insert(item *Obj, level int) {
+func (tree *hdb) insert(item *node.Node, level int) {
 	var nd *dbNode
 	var insertPath = make([]*dbNode, 0, tree.maxEntries)
 

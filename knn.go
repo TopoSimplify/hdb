@@ -3,6 +3,7 @@ package hdb
 import (
 	"github.com/intdxdt/heap"
 	"github.com/intdxdt/mbr"
+	"github.com/TopoSimplify/node"
 )
 
 func predicate(_ *KObj) (bool, bool) {
@@ -11,7 +12,7 @@ func predicate(_ *KObj) (bool, bool) {
 
 func (tree *hdb) Knn(
 	query mbr.MBR, limit int, score func(*mbr.MBR, *KObj) float64,
-	predicates ...func(*KObj) (bool, bool)) []*Obj {
+	predicates ...func(*KObj) (bool, bool)) []*node.Node {
 
 	var predFn = predicate
 	if len(predicates) > 0 {
@@ -19,7 +20,7 @@ func (tree *hdb) Knn(
 	}
 
 	var nd = &tree.Data
-	var result []*Obj
+	var result []*node.Node
 	var child *dbNode
 	var stop, pred bool
 	var queue = heap.NewHeap(kObjCmp, heap.NewHeapType().AsMin())

@@ -2,19 +2,20 @@ package hdb
 
 import (
 	"github.com/intdxdt/mbr"
+	"github.com/TopoSimplify/node"
 )
 
 //LoadBoxes loads bounding boxes
 func (tree *hdb) LoadBoxes(data []mbr.MBR) *hdb {
-	var items = make([]*Obj, 0, len(data))
+	var items = make([]*node.Node, 0, len(data))
 	for i := range data {
-		items = append(items, &Obj{Id: i, MBR: data[i]})
+		items = append(items, &node.Node{Id: i, MBR: data[i]})
 	}
 	return tree.Load(items)
 }
 
 //Load implements bulk loading
-func (tree *hdb) Load(items []*Obj) *hdb {
+func (tree *hdb) Load(items []*node.Node) *hdb {
 	var n  = len(items)
 	if n < tree.minEntries {
 		for i := range items {
@@ -23,7 +24,7 @@ func (tree *hdb) Load(items []*Obj) *hdb {
 		return tree
 	}
 
-	var data = make([]*Obj, 0, n)
+	var data = make([]*node.Node, 0, n)
 	for i := range items {
 		data = append(data, items[i])
 	}

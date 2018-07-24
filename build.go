@@ -1,9 +1,12 @@
 package hdb
 
-import "math"
+import (
+	"math"
+	"github.com/TopoSimplify/node"
+)
 
 //build
-func (tree *hdb) buildTree(items []*Obj, left, right, height int) dbNode {
+func (tree *hdb) buildTree(items []*node.Node, left, right, height int) dbNode {
 	var N = float64(right - left + 1)
 	var M = float64(tree.maxEntries)
 	//var n *dbNode

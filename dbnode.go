@@ -2,19 +2,20 @@ package hdb
 
 import (
 	"github.com/intdxdt/mbr"
+	"github.com/TopoSimplify/node"
 )
 
 //dbNode type for internal dbNode
 type dbNode struct {
 	children []dbNode
-	item     *Obj
+	item     *node.Node
 	height   int
 	leaf     bool
 	bbox     mbr.MBR
 }
 
 //newNode creates a new dbNode
-func newNode(item *Obj, height int, leaf bool, children []dbNode) dbNode {
+func newNode(item *node.Node, height int, leaf bool, children []dbNode) dbNode {
 	return dbNode{
 		children: children,
 		item:     item,
@@ -25,7 +26,7 @@ func newNode(item *Obj, height int, leaf bool, children []dbNode) dbNode {
 }
 
 //dbNode type for internal dbNode
-func newLeafNode(item *Obj) dbNode {
+func newLeafNode(item *node.Node) dbNode {
 	return dbNode{
 		children: []dbNode{},
 		item:     item,
@@ -41,10 +42,6 @@ func (nd *dbNode) BBox() *mbr.MBR {
 	return &nd.bbox
 }
 
-//GetItem from dbNode
-func (nd *dbNode) GetItem() *Obj {
-	return nd.item
-}
 
 //add child
 func (nd *dbNode) addChild(child dbNode) {
@@ -52,7 +49,7 @@ func (nd *dbNode) addChild(child dbNode) {
 }
 
 //Constructs children of dbNode
-func makeChildren(items []*Obj) []dbNode {
+func makeChildren(items []*node.Node) []dbNode {
 	var chs = make([]dbNode, 0, len(items))
 	for i := range items {
 		chs = append(chs, newLeafNode(items[i]))

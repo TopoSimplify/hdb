@@ -6,6 +6,7 @@ import (
 	"testing"
 	"math/rand"
 	"github.com/intdxdt/mbr"
+	"github.com/TopoSimplify/node"
 )
 
 func RandBox(size float64, rnd *rand.Rand) mbr.MBR {
@@ -41,7 +42,7 @@ var foundTotal int
 func Benchmark_Insert_OneByOne_SmallBigData(b *testing.B) {
 	var tree = NewRTree(maxFill)
 	for i := 0; i < len(BenchData); i++ {
-		tree.Insert(Object(i, BenchData[i]))
+		tree.Insert(&node.Node{MBR: BenchData[i]})
 	}
 	box = tree.Data.BBox()
 }
@@ -60,7 +61,7 @@ func Benchmark_Insert_Load_SmallBigData(b *testing.B) {
 
 func BenchmarkRTree_Search_1000_10pct(b *testing.B) {
 	var found = 0
-	var items []*Obj
+	var items []*node.Node
 	for i := 0; i < 1000; i++ {
 		items = tree.Search(bboxes100[i])
 		found += len(items)
@@ -69,7 +70,7 @@ func BenchmarkRTree_Search_1000_10pct(b *testing.B) {
 }
 func BenchmarkRTree_Search_1000_1pct(b *testing.B) {
 	var found = 0
-	var items []*Obj
+	var items []*node.Node
 	for i := 0; i < 1000; i++ {
 		items = tree.Search(bboxes10[i])
 		found += len(items)
@@ -79,7 +80,7 @@ func BenchmarkRTree_Search_1000_1pct(b *testing.B) {
 
 func BenchmarkRTree_Search_1000_01pct(b *testing.B) {
 	var found = 0
-	var items []*Obj
+	var items []*node.Node
 	for i := 0; i < 1000; i++ {
 		items = tree.Search(bboxes1[i])
 		found += len(items)

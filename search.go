@@ -2,16 +2,17 @@ package hdb
 
 import (
 	"github.com/intdxdt/mbr"
+	"github.com/TopoSimplify/node"
 )
 
 //Search item
-func (tree *hdb) Search(query mbr.MBR) []*Obj {
+func (tree *hdb) Search(query mbr.MBR) []*node.Node {
 	var bbox = &query
-	var result []*Obj
+	var result []*node.Node
 	var nd = &tree.Data
 
 	if !intersects(bbox, &nd.bbox) {
-		return []*Obj{}
+		return []*node.Node{}
 	}
 
 	var nodesToSearch []*dbNode
@@ -40,7 +41,7 @@ func (tree *hdb) Search(query mbr.MBR) []*Obj {
 		}
 	}
 
-	//var objs = make([]*Obj, 0, len(result))
+	//var objs = make([]*node.Node, 0, len(result))
 	//for i := range result {
 	//	objs = append(objs, result[i].item)
 	//}
@@ -48,12 +49,12 @@ func (tree *hdb) Search(query mbr.MBR) []*Obj {
 }
 
 //All items from  root dbNode
-func (tree *hdb) All() []*Obj {
-	return all(&tree.Data, []*Obj{})
+func (tree *hdb) All() []*node.Node {
+	return all(&tree.Data, []*node.Node{})
 }
 
 //all - fetch all items from dbNode
-func all(nd *dbNode, result []*Obj) []*Obj {
+func all(nd *dbNode, result []*node.Node) []*node.Node {
 	var nodesToSearch []*dbNode
 	for {
 		if nd.leaf {

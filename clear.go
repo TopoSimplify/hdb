@@ -3,6 +3,7 @@ package hdb
 import (
 	"math"
 	"github.com/intdxdt/mbr"
+	"github.com/TopoSimplify/node"
 )
 
 func emptyMBR() mbr.MBR {
@@ -12,34 +13,13 @@ func emptyMBR() mbr.MBR {
 	}
 }
 
-type Obj struct {
-	Id     int
-	Meta   int
-	MBR    mbr.MBR
-	Object interface{}
-}
-
-func emptyObject() *Obj {
-	return &Obj{
-		Id:     -1,
-		Meta:   -1,
-		MBR:    emptyMBR(),
-		Object: nil,
+func emptyObject() *node.Node {
+	return &node.Node{
+		MBR: emptyMBR(),
 	}
 }
 
-func Object(id int, box mbr.MBR, object ...interface{}) *Obj {
-	var obj interface{}
-	if len(object) > 0 {
-		obj = object[0]
-	}
-	return &Obj{
-		Id:     id,
-		MBR:    box,
-		Object: obj,
-		Meta:   -1,
-	}
-}
+
 
 func (tree *hdb) Clear() *hdb {
 	tree.Data = newNode(

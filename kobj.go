@@ -3,6 +3,7 @@ package hdb
 import (
 	"fmt"
 	"github.com/intdxdt/mbr"
+	"github.com/TopoSimplify/node"
 )
 
 //KObj instance struct
@@ -13,7 +14,7 @@ type KObj struct {
 	Dist   float64
 }
 
-func (kobj *KObj) GetItem() *Obj {
+func (kobj *KObj) GetItem() *node.Node {
 	return kobj.node.item
 }
 
