@@ -1,0 +1,48 @@
+package hdb
+
+import (
+	"sort"
+	"github.com/intdxdt/mbr"
+)
+
+//calcBBox calculates its bbox from bboxes of its children.
+func calcBBox(nd *dbNode) {
+	nd.bbox = distBBox(nd, 0, len(nd.children))
+}
+
+//distBBox computes min bounding rectangle of dbNode children from k to p-1.
+func distBBox(nd *dbNode, k, p int) mbr.MBR {
+	var bbox = emptyMBR()
+	for i := k; i < p; i++ {
+		extend(&bbox, &nd.children[i].bbox)
+	}
+	return bbox
+}
+
+//allDistMargin computes total margin of all possible split distributions.
+//Each dbNode is at least m full.
+func (tree *hdb) allDistMargin(nd *dbNode, m, M int, sortBy SortBy) float64 {
+	if sortBy == ByX {
+		sort.Sort(XNodePath{nd.children})
+		//bubbleAxis(*dbNode.getChildren(), ByX, ByY)
+	} else if sortBy == ByY {
+		sort.Sort(YNodePath{nd.children})
+		//bubbleAxis(*dbNode.getChildren(), ByY, ByX)
+	}
+
+	var i int
+	var leftBBox = distBBox(nd, 0, m)
+	var rightBBox = distBBox(nd, M-m, M)
+	var margin = bboxMargin(&leftBBox) + bboxMargin(&rightBBox)
+
+	for i = m; i < M-m; i++ {
+		extend(&leftBBox, &nd.children[i].bbox)
+		margin += bboxMargin(&leftBBox)
+	}
+
+	for i = M - m - 1; i >= m; i-- {
+		extend(&rightBBox, &nd.children[i].bbox)
+		margin += bboxMargin(&rightBBox)
+	}
+	return margin
+}
