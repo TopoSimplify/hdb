@@ -4,7 +4,6 @@ import (
 	"github.com/intdxdt/heap"
 	"github.com/intdxdt/mbr"
 	"github.com/TopoSimplify/node"
-	"fmt"
 )
 
 func predicate(_ *KObj) (bool, bool) {
@@ -20,7 +19,7 @@ func (tree *Hdb) Knn(
 		predFn = predicates[0]
 	}
 
-	var nd = &tree.Data
+	var nd = &tree.data
 	var result []*node.Node
 	var child *dbNode
 	var stop, pred bool
@@ -29,14 +28,13 @@ func (tree *Hdb) Knn(
 	for !stop && (nd != nil) {
 		for i := range nd.children {
 			child = &nd.children[i]
-			fmt.Println(child.item.Geometry.WKT())
 			var o = &KObj{
-				dbNode: child,
-				MBR:    &child.bbox,
-				IsItem: len(child.children) == 0,
-				Dist:   -1,
+				dbNode:   child,
+				MBR:      &child.bbox,
+				IsItem:   len(child.children) == 0,
+				Distance: -1,
 			}
-			o.Dist = score(&query, o)
+			o.Distance = score(&query, o)
 			queue.Push(o)
 		}
 

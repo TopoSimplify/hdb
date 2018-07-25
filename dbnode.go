@@ -14,8 +14,8 @@ type dbNode struct {
 	bbox     mbr.MBR
 }
 
-//newNode creates a new dbNode
-func newNode(item *node.Node, height int, leaf bool, children []dbNode) dbNode {
+//createDBNode creates a new dbNode
+func createDBNode(item *node.Node, height int, leaf bool, children []dbNode) dbNode {
 	var box mbr.MBR
 	if item == nil {
 		box = emptyMBR()

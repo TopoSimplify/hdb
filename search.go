@@ -9,7 +9,7 @@ import (
 func (tree *Hdb) Search(query mbr.MBR) []*node.Node {
 	var bbox = &query
 	var result []*node.Node
-	var nd = &tree.Data
+	var nd = &tree.data
 
 	if !intersects(bbox, &nd.bbox) {
 		return []*node.Node{}
@@ -40,17 +40,12 @@ func (tree *Hdb) Search(query mbr.MBR) []*node.Node {
 			break
 		}
 	}
-
-	//var objs = make([]*dbNode.dbNode, 0, len(result))
-	//for i := range result {
-	//	objs = append(objs, result[i].item)
-	//}
 	return result
 }
 
 //All items from  root dbNode
 func (tree *Hdb) All() []*node.Node {
-	return all(&tree.Data, []*node.Node{})
+	return all(&tree.data, []*node.Node{})
 }
 
 //all - fetch all items from dbNode

@@ -1,8 +1,8 @@
-# hdb
+## hdb
 2D spatial indexing of rectangles
 
 ### coverage
 coverage: 100.0% of statements
 
-# credits
+## credits
 based on js-version - [rbush](https://github.com/mourner/rbush)

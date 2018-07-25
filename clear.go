@@ -3,7 +3,6 @@ package hdb
 import (
 	"math"
 	"github.com/intdxdt/mbr"
-	"github.com/TopoSimplify/node"
 )
 
 func emptyMBR() mbr.MBR {
@@ -13,18 +12,12 @@ func emptyMBR() mbr.MBR {
 	}
 }
 
-func emptyObject() *node.Node {
-	return &node.Node{
-		MBR: emptyMBR(),
-	}
-}
-
 func (tree *Hdb) Clear() *Hdb {
-	tree.Data = newNode(nil, 1, true, []dbNode{}, )
+	tree.data = createDBNode(nil, 1, true, []dbNode{}, )
 	return tree
 }
 
 //IsEmpty checks for empty tree
 func (tree *Hdb) IsEmpty() bool {
-	return len(tree.Data.children) == 0
+	return len(tree.data.children) == 0
 }

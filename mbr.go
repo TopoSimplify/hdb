@@ -21,13 +21,13 @@ func distBBox(nd *dbNode, k, p int) mbr.MBR {
 
 //allDistMargin computes total margin of all possible split distributions.
 //Each dbNode is at least m full.
-func (tree *Hdb) allDistMargin(nd *dbNode, m, M int, sortBy SortBy) float64 {
-	if sortBy == ByX {
-		sort.Sort(XNodePath{nd.children})
-		//bubbleAxis(*dbNode.getChildren(), ByX, ByY)
-	} else if sortBy == ByY {
-		sort.Sort(YNodePath{nd.children})
-		//bubbleAxis(*dbNode.getChildren(), ByY, ByX)
+func (tree *Hdb) allDistMargin(nd *dbNode, m, M int, sortBy sortBy) float64 {
+	if sortBy == byX {
+		sort.Sort(xNodePath{nd.children})
+		//bubbleAxis(*dbNode.getChildren(), byX, byY)
+	} else if sortBy == byY {
+		sort.Sort(yNodePath{nd.children})
+		//bubbleAxis(*dbNode.getChildren(), byY, byX)
 	}
 
 	var i int

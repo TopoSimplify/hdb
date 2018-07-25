@@ -8,7 +8,7 @@ import (
 // _split overflowed dbNode into two
 func (tree *Hdb) split(insertPath []*dbNode, level int) {
 	var nd = insertPath[level]
-	var newNode = newNode(nil, nd.height, nd.leaf, []dbNode{})
+	var newNode = createDBNode(nil, nd.height, nd.leaf, []dbNode{})
 	var M = len(nd.children)
 	var m = tree.minEntries
 
@@ -30,8 +30,8 @@ func (tree *Hdb) split(insertPath []*dbNode, level int) {
 //_splitRoot splits the root of tree.
 func (tree *Hdb) splitRoot(nd, other dbNode) {
 	// split root dbNode
-	tree.Data = newNode(nil, nd.height+1, false, []dbNode{nd, other}, )
-	calcBBox(&tree.Data)
+	tree.data = createDBNode(nil, nd.height+1, false, []dbNode{nd, other}, )
+	calcBBox(&tree.data)
 }
 
 //_chooseSplitIndex selects split index.
@@ -56,7 +56,6 @@ func (tree *Hdb) chooseSplitIndex(nd *dbNode, m, M int) int {
 			if area < minArea {
 				minArea = area
 			}
-
 		} else if overlap == minOverlap {
 			// otherwise choose distribution with minimum area
 			if area < minArea {
@@ -72,12 +71,12 @@ func (tree *Hdb) chooseSplitIndex(nd *dbNode, m, M int) int {
 //_chooseSplitAxis selects split axis : sorts dbNode children
 //by the best axis for split.
 func (tree *Hdb) chooseSplitAxis(nd *dbNode, m, M int) {
-	var xMargin = tree.allDistMargin(nd, m, M, ByX)
-	var yMargin = tree.allDistMargin(nd, m, M, ByY)
+	var xMargin = tree.allDistMargin(nd, m, M, byX)
+	var yMargin = tree.allDistMargin(nd, m, M, byY)
 
 	// if total distributions margin value is minimal for x, sort by minX,
 	// otherwise it's already sorted by minY
 	if xMargin < yMargin {
-		sort.Sort(&XNodePath{nd.children})
+		sort.Sort(&xNodePath{nd.children})
 	}
 }

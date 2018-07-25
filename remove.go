@@ -104,7 +104,7 @@ func (tree *Hdb) removeMBR(item *mbr.MBR) *Hdb {
 }
 
 func (tree *Hdb) removeItem(item *mbr.MBR, predicate func(*dbNode, int) bool) *Hdb {
-	var nd = &tree.Data
+	var nd = &tree.data
 	var parent *dbNode
 	var bbox = item.BBox()
 	var path = make([]*dbNode, 0)

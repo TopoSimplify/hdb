@@ -42,7 +42,7 @@ func TestRtreeBuild(t *testing.T) {
 			//	//db.Insert(&data[i])
 			//	if i == 9 || i == 16 || i == 24 || i == 27 || i == 37 || i == 62 {
 			//		fmt.Println("\n\n")
-			//		print_rtree(db.Data)
+			//		print_rtree(db.data)
 			//	}
 			//}
 

@@ -30,26 +30,26 @@ func multiSelect(arr []*node.Node, left, right, n int, compare compareNode) {
 // sort array between left and right (inclusive) so that the smallest k elements come first (unordered)
 func selectBox(arr []*node.Node, left, right, k int, compare compareNode) {
 	var i, j int
-	var fn, fi, fNewLeft, fNewRight, fsn, fz, fs, fsd float64
-	var fLeft, fRight, fk = float64(left), float64(right), float64(k)
+	var fn, fi, fnewleft, fnewright, fsn, fz, fs, fsd float64
+	var fleft, fright, fk = float64(left), float64(right), float64(k)
 	var t *node.Node
 
 	for right > left {
 		//the arbitrary constants 600 and 0.5 are used in the original
 		// version to minimize execution time
 		if right-left > 600 {
-			fn = fRight - fLeft + 1.0
-			fi = fk - fLeft + 1.0
+			fn = fright - fleft + 1.0
+			fi = fk - fleft + 1.0
 			fz = math.Log(fn)
-			fs = 0.5 * math.Exp(2*fz/3.0)
+			fs = 0.5 * math.Exp(2.0 * fz/3.0)
 			fsn = 1.0
-			if (fi - fn/2) < 0 {
+			if (fi - fn/2.0) < 0 {
 				fsn = -1.0
 			}
-			fsd = 0.5 * math.Sqrt(fz*fs*(fn-fs)/fn) * (fsn)
-			fNewLeft = max(fLeft, math.Floor(fk-fi*fs/fn+fsd))
-			fNewRight = min(fRight, math.Floor(fk+(fn-fi)*fs/fn+fsd))
-			selectBox(arr, int(fNewLeft), int(fNewRight), int(fk), compare)
+			fsd = 0.5 * math.Sqrt(fz*fs*(fn-fs)/fn) * fsn
+			fnewleft = max(fleft, math.Floor(fk-fi*fs/fn+fsd))
+			fnewright = min(fright, math.Floor(fk + (fn-fi)*fs/fn+fsd))
+			selectBox(arr, int(fnewleft), int(fnewright), int(fk), compare)
 		}
 
 		t = arr[k]

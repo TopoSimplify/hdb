@@ -7,11 +7,11 @@ import (
 
 var inf = math.Inf(1)
 var feq =  math.FloatEqual
-type SortBy int
+type sortBy int
 
 const (
-	ByX SortBy = iota
-	ByY
+	byX sortBy = iota
+	byY
 )
 
 const (

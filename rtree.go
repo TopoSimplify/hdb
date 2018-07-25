@@ -9,7 +9,7 @@ package hdb
 
 //Hdb type
 type Hdb struct {
-	Data       dbNode
+	data       dbNode
 	maxEntries int
 	minEntries int
 }

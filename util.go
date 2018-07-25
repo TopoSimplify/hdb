@@ -39,7 +39,7 @@ func max(a, b float64) float64 {
 	return a
 }
 
-//min integer
+//minint
 func minInt(a, b int) int {
 	if b < a {
 		return b

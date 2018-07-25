@@ -1,7 +1,6 @@
 package hdb
 
 import (
-	"fmt"
 	"github.com/intdxdt/mbr"
 	"github.com/TopoSimplify/node"
 )
@@ -10,7 +9,7 @@ func (tree *Hdb) Insert(item *node.Node) *Hdb {
 	if item == nil {
 		return tree
 	}
-	tree.insert(item, tree.Data.height-1)
+	tree.insert(item, tree.data.height-1)
 	return tree
 }
 
@@ -20,12 +19,10 @@ func (tree *Hdb) insert(item *node.Node, level int) *Hdb {
 	var insertPath = make([]*dbNode, 0, tree.maxEntries)
 
 	// find the best dbNode for accommodating the item, saving all nodes along the path too
-	nd, insertPath = chooseSubtree(&item.MBR, &tree.Data, level, insertPath)
+	nd, insertPath = chooseSubtree(&item.MBR, &tree.data, level, insertPath)
 
 	// put the item into the dbNode item_bbox
-	var new_node = newLeafNode(item)
-	fmt.Println(new_node.item.Geometry.WKT())
-	nd.addChild(new_node)
+	nd.addChild(newLeafNode(item))
 	extend(&nd.bbox, &item.MBR)
 
 	// split on dbNode overflow propagate upwards if necessary
@@ -42,7 +39,7 @@ func (tree *Hdb) insertNode(item dbNode, level int) {
 	var insertPath []*dbNode
 
 	// find the best dbNode for accommodating the item, saving all nodes along the path too
-	nd, insertPath = chooseSubtree(&item.bbox, &tree.Data, level, insertPath)
+	nd, insertPath = chooseSubtree(&item.bbox, &tree.data, level, insertPath)
 
 	nd.children = append(nd.children, item)
 	extend(&nd.bbox, &item.bbox)

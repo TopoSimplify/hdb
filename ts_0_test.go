@@ -77,13 +77,13 @@ func TestRtreeRbush(t *testing.T) {
 	g.Describe("Hdb Tests - From Rbush", func() {
 		g.It("should test load 9 & 10", func() {
 			var tree0 = NewHdb().loadBoxes(someData(0))
-			g.Assert(tree0.Data.height).Equal(1)
+			g.Assert(tree0.data.height).Equal(1)
 
 			var tree1 = NewHdb(8).loadBoxes(someData(8))
-			g.Assert(tree1.Data.height).Equal(1)
+			g.Assert(tree1.data.height).Equal(1)
 
 			var tree2 = NewHdb(8).loadBoxes(someData(10))
-			g.Assert(tree2.Data.height).Equal(2)
+			g.Assert(tree2.data.height).Equal(2)
 		})
 
 		g.It("tests search with some other", func() {
@@ -116,7 +116,7 @@ func TestRtreeRbush(t *testing.T) {
 			var tree2 = NewHdb(8).loadBoxes(data).Insert(
 				&node.Node{Id: 0, MBR: data[0]},
 			).Insert(&node.Node{Id: 1, MBR: data[1]}).Insert(&node.Node{Id: 2, MBR: data[2]})
-			g.Assert(tree.Data).Eql(tree2.Data)
+			g.Assert(tree.data).Eql(tree2.data)
 		})
 
 		g.It("#load does nothing if loading empty data", func() {
@@ -148,7 +148,7 @@ func TestRtreeRbush(t *testing.T) {
 
 			var tree1 = NewHdb(4).loadBoxes(data).loadBoxes(smaller)
 			var tree2 = NewHdb(4).loadBoxes(smaller).loadBoxes(data)
-			g.Assert(tree1.Data.height).Equal(tree2.Data.height)
+			g.Assert(tree1.data.height).Equal(tree2.data.height)
 			testResults(g, tree1.All(), cloneData)
 			testResults(g, tree2.All(), cloneData)
 		})
@@ -168,7 +168,7 @@ func TestRtreeRbush(t *testing.T) {
 
 			var tree1 = NewHdb(64).loadBoxes(larger).loadBoxes(smaller)
 			var tree2 = NewHdb(64).loadBoxes(smaller).loadBoxes(larger)
-			g.Assert(tree1.Data.height).Equal(tree2.Data.height)
+			g.Assert(tree1.data.height).Equal(tree2.data.height)
 			testResults(g, tree1.All(), cloneData)
 			testResults(g, tree2.All(), cloneData)
 		})
@@ -195,7 +195,7 @@ func TestRtreeRbush(t *testing.T) {
 			g.Assert(len(result)).Equal(0)
 		})
 
-		g.It("#all <==>.Data returns all points in the tree", func() {
+		g.It("#all <==>.data returns all points in the tree", func() {
 			var cloneData = make([]mbr.MBR, len(data))
 			for i := 0; i < len(data); i++ {
 				cloneData[i] = data[i]
@@ -211,11 +211,11 @@ func TestRtreeRbush(t *testing.T) {
 			var tree = NewHdb(4)
 			tree.loadBoxes(data)
 			tree.Insert(&node.Node{MBR: mbr.CreateMBR(3, 3, 3, 3)})
-			g.Assert(tree.Data.leaf).IsTrue()
-			g.Assert(tree.Data.height).Equal(1)
+			g.Assert(tree.data.leaf).IsTrue()
+			g.Assert(tree.data.height).Equal(1)
 			var box = mbr.CreateMBR(0, 0, 3, 3)
-			g.Assert(tree.Data.bbox.Equals(&box)).IsTrue()
-			testResults(g, getObjs(tree.Data.children), []mbr.MBR{
+			g.Assert(tree.data.bbox.Equals(&box)).IsTrue()
+			testResults(g, getObjs(tree.data.children), []mbr.MBR{
 				{0, 0, 0, 0}, {1, 1, 1, 1}, {2, 2, 2, 2}, {3, 3, 3, 3},
 			})
 		})
@@ -223,7 +223,7 @@ func TestRtreeRbush(t *testing.T) {
 		g.It("#insert does nothing if given nil", func() {
 			var o *node.Node
 			var tree = NewHdb(4).loadBoxes(data)
-			g.Assert(tree.Data).Eql(NewHdb(4).loadBoxes(data).Insert(o).Data)
+			g.Assert(tree.data).Eql(NewHdb(4).loadBoxes(data).Insert(o).data)
 		})
 
 		g.It("#insert forms a valid tree if items are inserted one by one", func() {
@@ -233,7 +233,7 @@ func TestRtreeRbush(t *testing.T) {
 			}
 
 			var tree2 = NewHdb(4).loadBoxes(data)
-			g.Assert(tree.Data.height-tree2.Data.height <= 1).IsTrue()
+			g.Assert(tree.data.height-tree2.data.height <= 1).IsTrue()
 
 			var boxes2 = make([]mbr.MBR, 0)
 			var all2 = tree2.All()
@@ -268,9 +268,9 @@ func TestRtreeRbush(t *testing.T) {
 			var tree2 = NewHdb(0).loadBoxes(data)
 			var query = mbr.CreateMBR(13, 13, 13, 13)
 			var querybox = &node.Node{MBR: mbr.CreateMBR(13, 13, 13, 13)}
-			g.Assert(tree.Data).Eql(tree2.removeMBR(&query).Data)
-			g.Assert(tree.Data).Eql(tree2.RemoveNode(querybox).Data)
-			g.Assert(tree.Data).Eql(tree2.RemoveNode(item).Data)
+			g.Assert(tree.data).Eql(tree2.removeMBR(&query).data)
+			g.Assert(tree.data).Eql(tree2.RemoveNode(querybox).data)
+			g.Assert(tree.data).Eql(tree2.RemoveNode(item).data)
 		})
 
 		g.It("#remove brings the tree to a clear state when removing everything one by one", func() {
@@ -305,9 +305,9 @@ func TestRtreeUtil(t *testing.T) {
 	g.Describe("Hdb Util", func() {
 		g.It("tests pop nodes", func() {
 			g.Timeout(1 * time.Hour)
-			var a = newNode(&node.Node{MBR: emptyMBR()}, 0, true, nil)
-			var b = newNode(&node.Node{MBR: emptyMBR()}, 1, true, nil)
-			var c = newNode(&node.Node{MBR: emptyMBR()}, 1, true, nil)
+			var a = createDBNode(&node.Node{MBR: emptyMBR()}, 0, true, nil)
+			var b = createDBNode(&node.Node{MBR: emptyMBR()}, 1, true, nil)
+			var c = createDBNode(&node.Node{MBR: emptyMBR()}, 1, true, nil)
 			var nodes = make([]*dbNode, 0)
 			var n *dbNode
 

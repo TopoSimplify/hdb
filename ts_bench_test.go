@@ -44,19 +44,19 @@ func Benchmark_Insert_OneByOne_SmallBigData(b *testing.B) {
 	for i := 0; i < len(BenchData); i++ {
 		tree.Insert(&node.Node{MBR: BenchData[i]})
 	}
-	box = tree.Data.BBox()
+	box = tree.data.BBox()
 }
 
 func Benchmark_Load_Data(b *testing.B) {
 	var tree = NewHdb(maxFill)
 	tree.loadBoxes(BenchData)
-	box = tree.Data.BBox()
+	box = tree.data.BBox()
 }
 
 func Benchmark_Insert_Load_SmallBigData(b *testing.B) {
 	var tree = NewHdb(maxFill)
 	tree.loadBoxes(BenchData)
-	box = tree.Data.BBox()
+	box = tree.data.BBox()
 }
 
 func BenchmarkRTree_Search_1000_10pct(b *testing.B) {
@@ -93,5 +93,5 @@ func BenchmarkRTree_Build_And_Remove1000(b *testing.B) {
 	for i := 0; i < 1000; i++ {
 		tree = tree.removeMBR(&BenchData[i])
 	}
-	box = tree.Data.BBox()
+	box = tree.data.BBox()
 }

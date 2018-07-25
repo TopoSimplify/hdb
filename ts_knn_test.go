@@ -87,7 +87,7 @@ func TestRtreeKNNPredScore(t *testing.T) {
 			var createPredicate = func(dist float64) func(*KObj) (bool, bool) {
 				return func(candidate *KObj) (bool, bool) {
 					g.Assert(candidate.IsItem).IsTrue()
-					if candidate.Dist <= dist {
+					if candidate.Distance <= dist {
 						predicateMbr = append(predicateMbr, candidate.MBR)
 						return true, false
 					}

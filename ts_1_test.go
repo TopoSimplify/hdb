@@ -59,17 +59,17 @@ func TestRtree(t *testing.T) {
 		var pt = &Pnt{0, 0}
 		pt.BBox()
 		var item = &node.Node{Id: 0, MBR: pt.Bounds()}
-		var pth = make(NodePath, 0)
-		var b = newNode(item, 0, true, nil)
+		var pth NodePath
+		var b = createDBNode(item, 0, true, nil)
 
 		pth = append(pth, b)
 		pth = append(pth, b)
 		pth = append(pth, b)
 
-		n := newNode(item, 1, false, pth)
+		n := createDBNode(item, 1, false, pth)
 
 		var items = make([]*node.Node, 0, 10)
-		var nodes = make(NodePath, 0, 0)
+		var nodes NodePath
 
 		items = append(items, item)
 		nodes = append(nodes, b)
@@ -122,7 +122,7 @@ func TestRtree(t *testing.T) {
 			var length = len(data)
 			var dataOnebyone = data[:length:length]
 			for i := range dataOnebyone {
-				//fmt.Println(i, " -> ", len(oneT.Data.children))
+				//fmt.Println(i, " -> ", len(oneT.data.children))
 				oneT.Insert(&node.Node{MBR: dataOnebyone[i]})
 			}
 			//fill zero size
@@ -130,8 +130,8 @@ func TestRtree(t *testing.T) {
 				oneDeft.Insert(&node.Node{MBR: dataOnebyone[i]})
 			}
 
-			var oneMbr = oneT.Data.bbox
-			var oneDefMbr = oneDeft.Data.bbox
+			var oneMbr = oneT.data.bbox
+			var oneDefMbr = oneDeft.data.bbox
 
 			//fmt.Println(oneMbr.String())
 
@@ -142,13 +142,13 @@ func TestRtree(t *testing.T) {
 				bulkItems[i] = &node.Node{MBR: dataBulkload[i]}
 			}
 			bulkT.Load(bulkItems)
-			bukMbr := bulkT.Data.bbox
+			bukMbr := bulkT.data.bbox
 
 			g.Assert(oneMbr).Eql(oneDefMbr)
 			g.Assert(oneMbr).Eql(bukMbr)
-			g.Assert(len(bulkT.Data.children)).Equal(len(oneT.Data.children))
+			g.Assert(len(bulkT.data.children)).Equal(len(oneT.data.children))
 
-			//var tokens = print_RTree(oneT.Data)
+			//var tokens = print_RTree(oneT.data)
 			//for _, tok := range tokens {
 			//	fmt.Println(tok.wkt)
 			//	for _, ch := range tok.children {
@@ -184,8 +184,8 @@ func TestRtree(t *testing.T) {
 				tree.RemoveNode(res[i])
 			}
 			g.Assert(tree.IsEmpty()).IsTrue()
-			g.Assert(len(tree.Data.children)).Equal(0)
-			g.Assert(tree.Data.bbox).Eql(emptyMBR())
+			g.Assert(len(tree.data.children)).Equal(0)
+			g.Assert(tree.data.bbox).Eql(emptyMBR())
 
 		})
 	})

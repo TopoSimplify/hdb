@@ -33,20 +33,20 @@ func (tree *Hdb) Load(data []*node.Node) *Hdb {
 	// recursively build the tree with the given data from stratch using OMT algorithm
 	var nd = tree.buildTree(data, 0, n-1, 0)
 
-	if len(tree.Data.children) == 0 {
+	if len(tree.data.children) == 0 {
 		// save as is if tree is empty
-		tree.Data = nd
-	} else if tree.Data.height == nd.height {
+		tree.data = nd
+	} else if tree.data.height == nd.height {
 		// split root if trees have the same height
-		tree.splitRoot(tree.Data, nd)
+		tree.splitRoot(tree.data, nd)
 	} else {
-		if tree.Data.height < nd.height {
+		if tree.data.height < nd.height {
 			// swap trees if inserted one is bigger
-			tree.Data, nd = nd, tree.Data
+			tree.data, nd = nd, tree.data
 		}
 
 		// insert the small tree into the large tree at appropriate level
-		tree.insertNode(nd, tree.Data.height-nd.height-1)
+		tree.insertNode(nd, tree.data.height-nd.height-1)
 	}
 
 	return tree
