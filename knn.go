@@ -4,6 +4,7 @@ import (
 	"github.com/intdxdt/heap"
 	"github.com/intdxdt/mbr"
 	"github.com/TopoSimplify/node"
+	"fmt"
 )
 
 func predicate(_ *KObj) (bool, bool) {
@@ -28,6 +29,7 @@ func (tree *Hdb) Knn(
 	for !stop && (nd != nil) {
 		for i := range nd.children {
 			child = &nd.children[i]
+			fmt.Println(child.item.Geometry.WKT())
 			var o = &KObj{
 				dbNode: child,
 				MBR:    &child.bbox,

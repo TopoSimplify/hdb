@@ -8,7 +8,7 @@ import (
 // _split overflowed dbNode into two
 func (tree *Hdb) split(insertPath []*dbNode, level int) {
 	var nd = insertPath[level]
-	var newNode = newNode(emptyObject(), nd.height, nd.leaf, []dbNode{})
+	var newNode = newNode(nil, nd.height, nd.leaf, []dbNode{})
 	var M = len(nd.children)
 	var m = tree.minEntries
 
@@ -30,10 +30,7 @@ func (tree *Hdb) split(insertPath []*dbNode, level int) {
 //_splitRoot splits the root of tree.
 func (tree *Hdb) splitRoot(nd, other dbNode) {
 	// split root dbNode
-	tree.Data = newNode(
-		emptyObject(),
-		nd.height+1, false, []dbNode{nd, other},
-	)
+	tree.Data = newNode(nil, nd.height+1, false, []dbNode{nd, other}, )
 	calcBBox(&tree.Data)
 }
 

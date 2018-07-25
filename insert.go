@@ -1,6 +1,7 @@
 package hdb
 
 import (
+	"fmt"
 	"github.com/intdxdt/mbr"
 	"github.com/TopoSimplify/node"
 )
@@ -22,7 +23,9 @@ func (tree *Hdb) insert(item *node.Node, level int) *Hdb {
 	nd, insertPath = chooseSubtree(&item.MBR, &tree.Data, level, insertPath)
 
 	// put the item into the dbNode item_bbox
-	nd.addChild(newLeafNode(item))
+	var new_node = newLeafNode(item)
+	fmt.Println(new_node.item.Geometry.WKT())
+	nd.addChild(new_node)
 	extend(&nd.bbox, &item.MBR)
 
 	// split on dbNode overflow propagate upwards if necessary

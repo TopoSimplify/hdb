@@ -16,12 +16,19 @@ type dbNode struct {
 
 //newNode creates a new dbNode
 func newNode(item *node.Node, height int, leaf bool, children []dbNode) dbNode {
+	var box mbr.MBR
+	if item == nil {
+		box = emptyMBR()
+	} else {
+		box = item.MBR
+	}
+
 	return dbNode{
 		children: children,
 		item:     item,
 		height:   height,
 		leaf:     leaf,
-		bbox:     item.MBR,
+		bbox:     box,
 	}
 }
 
@@ -36,12 +43,10 @@ func newLeafNode(item *node.Node) dbNode {
 	}
 }
 
-
 //MBR returns bbox property
 func (nd *dbNode) BBox() *mbr.MBR {
 	return &nd.bbox
 }
-
 
 //add child
 func (nd *dbNode) addChild(child dbNode) {

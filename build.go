@@ -12,10 +12,8 @@ func (tree *Hdb) buildTree(items []*node.Node, left, right, height int) dbNode {
 	//var n *dbNode
 	if N <= M {
 		// reached leaf level return leaf
-		var n = newNode(
-			emptyObject(), 1, true,
-			makeChildren(items[left:right+1:right+1]),
-		)
+		var n = newNode(nil, 1, true,
+			makeChildren(items[left:right+1:right+1]))
 		calcBBox(&n)
 		return n
 	}
@@ -31,10 +29,7 @@ func (tree *Hdb) buildTree(items []*node.Node, left, right, height int) dbNode {
 
 	// TODO eliminate recursion?
 
-	var n = newNode(
-		emptyObject(),
-		height, false, []dbNode{},
-	)
+	var n = newNode(nil, height, false, []dbNode{})
 
 	// split the items into M mostly square tiles
 
