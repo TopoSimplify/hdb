@@ -4,20 +4,22 @@ import (
 	"github.com/intdxdt/mbr"
 	"github.com/TopoSimplify/node"
 )
-
-//insert - private
+//Insert item
 func (tree *Hdb) Insert(item *node.Node) *Hdb {
 	if item == nil {
 		return tree
 	}
+	tree.insert(item, tree.Data.height-1)
+	return tree
+}
+
+//insert - private
+func (tree *Hdb) insert(item *node.Node, level int) *Hdb {
 	var nd *dbNode
-	var level = tree.Data.height - 1
 	var insertPath = make([]*dbNode, 0, tree.maxEntries)
 
 	// find the best dbNode for accommodating the item, saving all nodes along the path too
-	nd, insertPath = chooseSubtree(
-		&item.MBR, &tree.Data, level, insertPath,
-	)
+	nd, insertPath = chooseSubtree(&item.MBR, &tree.Data, level, insertPath)
 
 	// put the item into the dbNode item_bbox
 	nd.addChild(newLeafNode(item))
