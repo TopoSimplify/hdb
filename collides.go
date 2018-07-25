@@ -2,7 +2,7 @@ package hdb
 
 import "github.com/intdxdt/mbr"
 
-func (tree *hdb) Collides(query mbr.MBR) bool {
+func (tree *Hdb) Collides(query mbr.MBR) bool {
     var bbox = &query
     if !intersects(bbox, &tree.Data.bbox) {
         return false

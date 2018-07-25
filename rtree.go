@@ -7,16 +7,16 @@ package hdb
  @after  (c) 2015, Vladimir Agafonkin
 */
 
-//hdb type
-type hdb struct {
+//Hdb type
+type Hdb struct {
 	Data       dbNode
 	maxEntries int
 	minEntries int
 }
 
-func NewRTree(nodeCap ...int) *hdb {
+func NewHdb(nodeCap ...int) *Hdb {
 	var bucketSize = 8
-	var tree = hdb{}
+	var tree = Hdb{}
 	tree.Clear()
 	if len(nodeCap) > 0 {
 		bucketSize = nodeCap[0]

@@ -6,7 +6,7 @@ import (
 )
 
 //insert - private
-func (tree *hdb) Insert(item *node.Node) *hdb {
+func (tree *Hdb) Insert(item *node.Node) *Hdb {
 	if item == nil {
 		return tree
 	}
@@ -32,7 +32,7 @@ func (tree *hdb) Insert(item *node.Node) *hdb {
 }
 
 //insert - private
-func (tree *hdb) insertNode(item dbNode, level int) {
+func (tree *Hdb) insertNode(item dbNode, level int) {
 	var nd *dbNode
 	var insertPath []*dbNode
 
@@ -50,7 +50,7 @@ func (tree *hdb) insertNode(item dbNode, level int) {
 }
 
 // split on dbNode overflow propagate upwards if necessary
-func (tree *hdb) splitOnOverflow(level int, insertPath []*dbNode) (int, []*dbNode) {
+func (tree *Hdb) splitOnOverflow(level int, insertPath []*dbNode) (int, []*dbNode) {
 	for (level >= 0) && (len(insertPath[level].children) > tree.maxEntries) {
 		tree.split(insertPath, level)
 		level--

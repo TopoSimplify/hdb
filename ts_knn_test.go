@@ -49,10 +49,10 @@ func foundIn(needle mbr.MBR, haystack []mbr.MBR) bool {
 
 func TestRtreeKNN(t *testing.T) {
 	g := goblin.Goblin(t)
-	g.Describe("hdb Knn", func() {
+	g.Describe("Hdb Knn", func() {
 		initKnn()
 		g.It("finds n neighbours", func() {
-			var rt = NewRTree(9)
+			var rt = NewHdb(9)
 			rt.Load(knnData)
 			var  nn = rt.Knn(mbr.CreateMBR(40, 40, 40, 40), 10, scoreFn)
 			var result = []mbr.MBR{
@@ -73,7 +73,7 @@ func TestRtreeKNN(t *testing.T) {
 
 func TestRtreeKNNPredScore(t *testing.T) {
 	g := goblin.Goblin(t)
-	g.Describe("hdb Knn - Pred, Score", func() {
+	g.Describe("Hdb Knn - Pred, Score", func() {
 
 		initKnn()
 		g.It("finds n neighbours with geoms", func() {
@@ -94,7 +94,7 @@ func TestRtreeKNNPredScore(t *testing.T) {
 					return false, true
 				}
 			}
-			rt := NewRTree(9)
+			rt := NewHdb(9)
 			rt.Load(knnData)
 			prefFn := createPredicate(6)
 			query := mbr.CreateMBR(
@@ -145,10 +145,10 @@ func TestQobj_String(t *testing.T) {
 
 //func TestRtreeKNNPredicate(t *testing.T) {
 //	g := goblin.Goblin(t)
-//	g.Describe("hdb Knn Predicate", func() {
+//	g.Describe("Hdb Knn Predicate", func() {
 //		g.It("find n neighbours that do satisfy a given predicate", func() {
 //			g.Timeout(1 * time.Hour)
-//			var rt = NewRTree(9)
+//			var rt = NewHdb(9)
 //			rt.Load(fnRichData())
 //
 //			var scoreFn = func(query *mbr.MBR, boxer *KObj) float64 {

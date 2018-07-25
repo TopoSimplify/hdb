@@ -21,7 +21,7 @@ func emptyObject() *node.Node {
 
 
 
-func (tree *hdb) Clear() *hdb {
+func (tree *Hdb) Clear() *Hdb {
 	tree.Data = newNode(
 		emptyObject(), 1, true, []dbNode{},
 	)
@@ -29,6 +29,6 @@ func (tree *hdb) Clear() *hdb {
 }
 
 //IsEmpty checks for empty tree
-func (tree *hdb) IsEmpty() bool {
+func (tree *Hdb) IsEmpty() bool {
 	return len(tree.Data.children) == 0
 }

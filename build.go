@@ -6,7 +6,7 @@ import (
 )
 
 //build
-func (tree *hdb) buildTree(items []*node.Node, left, right, height int) dbNode {
+func (tree *Hdb) buildTree(items []*node.Node, left, right, height int) dbNode {
 	var N = float64(right - left + 1)
 	var M = float64(tree.maxEntries)
 	//var n *dbNode

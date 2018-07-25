@@ -6,7 +6,7 @@ import (
 )
 
 //loadBoxes loads bounding boxes
-func (tree *hdb) loadBoxes(data []mbr.MBR) *hdb {
+func (tree *Hdb) loadBoxes(data []mbr.MBR) *Hdb {
 	var items = make([]*node.Node, 0, len(data))
 	for i := range data {
 		items = append(items, &node.Node{Id: i, MBR: data[i]})
@@ -15,7 +15,7 @@ func (tree *hdb) loadBoxes(data []mbr.MBR) *hdb {
 }
 
 //Load implements bulk loading
-func (tree *hdb) Load(data []*node.Node) *hdb {
+func (tree *Hdb) Load(data []*node.Node) *Hdb {
 	var n  = len(data)
 	if n < tree.minEntries {
 		for i := range data {

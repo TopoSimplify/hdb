@@ -6,7 +6,7 @@ import (
 )
 
 //Search item
-func (tree *hdb) Search(query mbr.MBR) []*node.Node {
+func (tree *Hdb) Search(query mbr.MBR) []*node.Node {
 	var bbox = &query
 	var result []*node.Node
 	var nd = &tree.Data
@@ -49,7 +49,7 @@ func (tree *hdb) Search(query mbr.MBR) []*node.Node {
 }
 
 //All items from  root dbNode
-func (tree *hdb) All() []*node.Node {
+func (tree *Hdb) All() []*node.Node {
 	return all(&tree.Data, []*node.Node{})
 }
 

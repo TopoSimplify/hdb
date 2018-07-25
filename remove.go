@@ -55,7 +55,7 @@ func removeNode(a []dbNode, i int) []dbNode {
 }
 
 //condense dbNode and its path from the root
-func (tree *hdb) condense(path []*dbNode) {
+func (tree *Hdb) condense(path []*dbNode) {
 	var parent *dbNode
 	var i = len(path) - 1
 	// go through the path, removing empty nodes and updating bboxes
@@ -81,9 +81,9 @@ func (tree *hdb) condense(path []*dbNode) {
 	}
 }
 
-//Remove Item from hdb
+//Remove Item from Hdb
 //NOTE: remove node
-func (tree *hdb) RemoveNode(item *node.Node) *hdb {
+func (tree *Hdb) RemoveNode(item *node.Node) *Hdb {
 	if item == nil {
 		return tree
 	}
@@ -93,9 +93,9 @@ func (tree *hdb) RemoveNode(item *node.Node) *hdb {
 	return tree
 }
 
-//Remove Item from hdb
+//Remove Item from Hdb
 //NOTE:if item is a bbox , then first found bbox is removed
-func (tree *hdb) removeMBR(item *mbr.MBR) *hdb {
+func (tree *Hdb) removeMBR(item *mbr.MBR) *Hdb {
 	tree.removeItem(item,
 		func(nd *dbNode, i int) bool {
 			return nd.children[i].bbox.Equals(item)
@@ -103,7 +103,7 @@ func (tree *hdb) removeMBR(item *mbr.MBR) *hdb {
 	return tree
 }
 
-func (tree *hdb) removeItem(item *mbr.MBR, predicate func(*dbNode, int) bool) *hdb {
+func (tree *Hdb) removeItem(item *mbr.MBR, predicate func(*dbNode, int) bool) *Hdb {
 	var nd = &tree.Data
 	var parent *dbNode
 	var bbox = item.BBox()

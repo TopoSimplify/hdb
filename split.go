@@ -6,7 +6,7 @@ import (
 )
 
 // _split overflowed dbNode into two
-func (tree *hdb) split(insertPath []*dbNode, level int) {
+func (tree *Hdb) split(insertPath []*dbNode, level int) {
 	var nd = insertPath[level]
 	var newNode = newNode(emptyObject(), nd.height, nd.leaf, []dbNode{})
 	var M = len(nd.children)
@@ -28,7 +28,7 @@ func (tree *hdb) split(insertPath []*dbNode, level int) {
 }
 
 //_splitRoot splits the root of tree.
-func (tree *hdb) splitRoot(nd, other dbNode) {
+func (tree *Hdb) splitRoot(nd, other dbNode) {
 	// split root dbNode
 	tree.Data = newNode(
 		emptyObject(),
@@ -38,7 +38,7 @@ func (tree *hdb) splitRoot(nd, other dbNode) {
 }
 
 //_chooseSplitIndex selects split index.
-func (tree *hdb) chooseSplitIndex(nd *dbNode, m, M int) int {
+func (tree *Hdb) chooseSplitIndex(nd *dbNode, m, M int) int {
 	var i, index int
 	var overlap, area, minOverlap, minArea float64
 
@@ -74,7 +74,7 @@ func (tree *hdb) chooseSplitIndex(nd *dbNode, m, M int) int {
 
 //_chooseSplitAxis selects split axis : sorts dbNode children
 //by the best axis for split.
-func (tree *hdb) chooseSplitAxis(nd *dbNode, m, M int) {
+func (tree *Hdb) chooseSplitAxis(nd *dbNode, m, M int) {
 	var xMargin = tree.allDistMargin(nd, m, M, ByX)
 	var yMargin = tree.allDistMargin(nd, m, M, ByY)
 

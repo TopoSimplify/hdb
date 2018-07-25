@@ -10,7 +10,7 @@ func predicate(_ *KObj) (bool, bool) {
 	return true, false
 }
 
-func (tree *hdb) Knn(
+func (tree *Hdb) Knn(
 	query mbr.MBR, limit int, score func(*mbr.MBR, *KObj) float64,
 	predicates ...func(*KObj) (bool, bool)) []*node.Node {
 
