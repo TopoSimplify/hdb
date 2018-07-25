@@ -41,7 +41,7 @@ func (tree *hdb) Search(query mbr.MBR) []*node.Node {
 		}
 	}
 
-	//var objs = make([]*node.Node, 0, len(result))
+	//var objs = make([]*dbNode.dbNode, 0, len(result))
 	//for i := range result {
 	//	objs = append(objs, result[i].item)
 	//}

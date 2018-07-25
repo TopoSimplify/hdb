@@ -23,8 +23,7 @@ func emptyObject() *node.Node {
 
 func (tree *hdb) Clear() *hdb {
 	tree.Data = newNode(
-		emptyObject(),
-		1, true, []dbNode{},
+		emptyObject(), 1, true, []dbNode{},
 	)
 	return tree
 }

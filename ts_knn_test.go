@@ -155,7 +155,7 @@ func TestQobj_String(t *testing.T) {
 //				return query.Distance(boxer.MBR)
 //			}
 //			var predicate = func(v *KObj) (bool, bool) {
-//				return v.GetItem().Object.(*RichData).version < 5, false
+//				return v.GetNode().Object.(*RichData).version < 5, false
 //			}
 //			var result = rt.Knn(mbr.CreateMBR(2, 4, 2, 4), 1, scoreFn, predicate)
 //

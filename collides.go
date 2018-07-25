@@ -22,6 +22,5 @@ func (tree *hdb) Collides(query mbr.MBR) bool {
         }
         nd, searchList = popNode(searchList)
     }
-
     return bln
 }

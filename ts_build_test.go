@@ -37,7 +37,7 @@ func TestRtreeBuild(t *testing.T) {
 			g.Timeout(1 * time.Hour)
 			var db = NewRTree(9)
 			//one by one
-			db.LoadBoxes(data)
+			db.loadBoxes(data)
 			//for i := range data {
 			//	//db.Insert(&data[i])
 			//	if i == 9 || i == 16 || i == 24 || i == 27 || i == 37 || i == 62 {

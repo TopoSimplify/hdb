@@ -25,36 +25,32 @@ func sliceIndex(limit int, predicate func(i int) bool) int {
 
 //minimum float
 func min(a, b float64) float64 {
-	var m = a
 	if b < a {
-		m = b
+		return b
 	}
-	return m
+	return a
 }
 
 //maximum float
 func max(a, b float64) float64 {
-	var m = a
 	if b > a {
-		m = b
+		return b
 	}
-	return m
+	return a
 }
 
 //min integer
 func minInt(a, b int) int {
-	var m = a
 	if b < a {
-		m = b
+		return b
 	}
-	return m
+	return a
 }
 
 //maximum integer
 func maxInt(a, b int) int {
-	var m = a
 	if b > a {
-		m = b
+		return b
 	}
-	return m
+	return a
 }

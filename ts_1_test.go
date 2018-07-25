@@ -181,7 +181,7 @@ func TestRtree(t *testing.T) {
 		g.It("same root bounds for : bulkload & single insert ", func() {
 			var res = tree.Search(query)
 			for i := range res {
-				tree.RemoveObj(res[i])
+				tree.RemoveNode(res[i])
 			}
 			g.Assert(tree.IsEmpty()).IsTrue()
 			g.Assert(len(tree.Data.children)).Equal(0)

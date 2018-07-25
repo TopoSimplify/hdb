@@ -5,22 +5,19 @@ import (
 	"github.com/TopoSimplify/node"
 )
 
-//Insert item
+//insert - private
 func (tree *hdb) Insert(item *node.Node) *hdb {
 	if item == nil {
 		return tree
 	}
-	tree.insert(item, tree.Data.height-1)
-	return tree
-}
-
-//insert - private
-func (tree *hdb) insert(item *node.Node, level int) {
 	var nd *dbNode
+	var level = tree.Data.height - 1
 	var insertPath = make([]*dbNode, 0, tree.maxEntries)
 
 	// find the best dbNode for accommodating the item, saving all nodes along the path too
-	nd, insertPath = chooseSubtree(&item.MBR, &tree.Data, level, insertPath)
+	nd, insertPath = chooseSubtree(
+		&item.MBR, &tree.Data, level, insertPath,
+	)
 
 	// put the item into the dbNode item_bbox
 	nd.addChild(newLeafNode(item))
@@ -31,6 +28,7 @@ func (tree *hdb) insert(item *node.Node, level int) {
 
 	// adjust bboxes along the insertion path
 	tree.adjustParentBBoxes(&item.MBR, insertPath, level)
+	return tree
 }
 
 //insert - private
@@ -53,7 +51,7 @@ func (tree *hdb) insertNode(item dbNode, level int) {
 
 // split on dbNode overflow propagate upwards if necessary
 func (tree *hdb) splitOnOverflow(level int, insertPath []*dbNode) (int, []*dbNode) {
-	for (level >= 0) && (len(insertPath[level].children)  > tree.maxEntries) {
+	for (level >= 0) && (len(insertPath[level].children) > tree.maxEntries) {
 		tree.split(insertPath, level)
 		level--
 	}
@@ -153,16 +151,10 @@ func intersectionArea(a, b *mbr.MBR) float64 {
 
 //contains tests whether a contains b
 func contains(a, b *mbr.MBR) bool {
-	return (b[x1] >= a[x1] &&
-		b[x2] <= a[x2] &&
-		b[y1] >= a[y1] &&
-		b[y2] <= a[y2])
+	return b[x1] >= a[x1] && b[x2] <= a[x2] && b[y1] >= a[y1] && b[y2] <= a[y2]
 }
 
 //intersects tests a intersect b (MBR)
 func intersects(a, b *mbr.MBR) bool {
-	return !(b[x1] > a[x2] ||
-		b[x2] < a[x1] ||
-		b[y1] > a[y2] ||
-		b[y2] < a[y1])
+	return !(b[x1] > a[x2] || b[x2] < a[x1] || b[y1] > a[y2] || b[y2] < a[y1])
 }

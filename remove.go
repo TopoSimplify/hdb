@@ -82,21 +82,20 @@ func (tree *hdb) condense(path []*dbNode) {
 }
 
 //Remove Item from hdb
-//NOTE:if item is a bbox , then first found bbox is removed
-func (tree *hdb) RemoveObj(item *node.Node) *hdb {
+//NOTE: remove node
+func (tree *hdb) RemoveNode(item *node.Node) *hdb {
 	if item == nil {
 		return tree
 	}
-	tree.removeItem(&item.MBR,
-		func(nd *dbNode, i int) bool {
-			return nd.children[i].item == item
-		})
+	tree.removeItem(&item.MBR, func(nd *dbNode, i int) bool {
+		return nd.children[i].item == item
+	})
 	return tree
 }
 
 //Remove Item from hdb
 //NOTE:if item is a bbox , then first found bbox is removed
-func (tree *hdb) RemoveMBR(item *mbr.MBR) *hdb {
+func (tree *hdb) removeMBR(item *mbr.MBR) *hdb {
 	tree.removeItem(item,
 		func(nd *dbNode, i int) bool {
 			return nd.children[i].bbox.Equals(item)

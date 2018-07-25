@@ -5,8 +5,8 @@ import (
 	"github.com/TopoSimplify/node"
 )
 
-//LoadBoxes loads bounding boxes
-func (tree *hdb) LoadBoxes(data []mbr.MBR) *hdb {
+//loadBoxes loads bounding boxes
+func (tree *hdb) loadBoxes(data []mbr.MBR) *hdb {
 	var items = make([]*node.Node, 0, len(data))
 	for i := range data {
 		items = append(items, &node.Node{Id: i, MBR: data[i]})
@@ -15,19 +15,19 @@ func (tree *hdb) LoadBoxes(data []mbr.MBR) *hdb {
 }
 
 //Load implements bulk loading
-func (tree *hdb) Load(items []*node.Node) *hdb {
-	var n  = len(items)
+func (tree *hdb) Load(data []*node.Node) *hdb {
+	var n  = len(data)
 	if n < tree.minEntries {
-		for i := range items {
-			tree.Insert(items[i])
+		for i := range data {
+			tree.Insert(data[i])
 		}
 		return tree
 	}
 
-	var data = make([]*node.Node, 0, n)
-	for i := range items {
-		data = append(data, items[i])
-	}
+	//var data = make([]*node.Node, 0, n)
+	//for i := range items {
+	//	data = append(data, items[i])
+	//}
 
 
 	// recursively build the tree with the given data from stratch using OMT algorithm

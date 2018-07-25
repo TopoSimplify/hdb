@@ -29,8 +29,10 @@ func (tree *hdb) Knn(
 		for i := range nd.children {
 			child = &nd.children[i]
 			var o = &KObj{
-				child, &child.bbox,
-				len(child.children) == 0, -1,
+				dbNode: child,
+				MBR:    &child.bbox,
+				IsItem: len(child.children) == 0,
+				Dist:   -1,
 			}
 			o.Dist = score(&query, o)
 			queue.Push(o)
@@ -40,7 +42,7 @@ func (tree *hdb) Knn(
 			var candidate = queue.Pop().(*KObj)
 			pred, stop = predFn(candidate)
 			if pred {
-				result = append(result, candidate.GetItem())
+				result = append(result, candidate.GetNode())
 			}
 
 			if stop {
@@ -57,7 +59,7 @@ func (tree *hdb) Knn(
 			if q == nil {
 				nd = nil
 			} else {
-				nd = q.(*KObj).node
+				nd = q.(*KObj).dbNode
 			}
 		}
 	}
