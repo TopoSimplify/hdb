@@ -83,7 +83,7 @@ func (tree *Hdb) condense(path []*dbNode) {
 
 //Remove Item from Hdb
 //NOTE: remove node
-func (tree *Hdb) RemoveNode(item *node.Node) *Hdb {
+func (tree *Hdb) Remove(item *node.Node) *Hdb {
 	if item == nil {
 		return tree
 	}

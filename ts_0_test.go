@@ -269,17 +269,17 @@ func TestRtreeRbush(t *testing.T) {
 			var query = mbr.CreateMBR(13, 13, 13, 13)
 			var querybox = &node.Node{MBR: mbr.CreateMBR(13, 13, 13, 13)}
 			g.Assert(tree.data).Eql(tree2.removeMBR(&query).data)
-			g.Assert(tree.data).Eql(tree2.RemoveNode(querybox).data)
-			g.Assert(tree.data).Eql(tree2.RemoveNode(item).data)
+			g.Assert(tree.data).Eql(tree2.Remove(querybox).data)
+			g.Assert(tree.data).Eql(tree2.Remove(item).data)
 		})
 
 		g.It("#remove brings the tree to a clear state when removing everything one by one", func() {
 			var tree = NewHdb(4).loadBoxes(data)
 			var result = tree.Search(mbr.CreateMBR(0, 0, 100, 100))
 			for i := 0; i < len(result); i++ {
-				tree.RemoveNode(result[i])
+				tree.Remove(result[i])
 			}
-			g.Assert(tree.RemoveNode(&node.Node{}).IsEmpty()).IsTrue()
+			g.Assert(tree.Remove(&node.Node{}).IsEmpty()).IsTrue()
 		})
 
 		g.It("#clear should clear all the data in the tree", func() {
