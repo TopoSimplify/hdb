@@ -58,7 +58,7 @@ func TestRtree(t *testing.T) {
 	g.Describe("Hdb : dbNode, leaf, inode", func() {
 		var pt = &Pnt{0, 0}
 		pt.BBox()
-		var item = &node.Node{Id: 0, MBR: pt.Bounds()}
+		var item = &node.Node{ MBR: pt.Bounds()}
 		var pth NodePath
 		var b = createDBNode(item, 0, true, nil)
 

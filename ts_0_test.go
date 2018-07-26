@@ -114,8 +114,8 @@ func TestRtreeRbush(t *testing.T) {
 			var tree = NewHdb(8).loadBoxes(data)
 			tree.loadBoxes(data[0:3])
 			var tree2 = NewHdb(8).loadBoxes(data).Insert(
-				&node.Node{Id: 0, MBR: data[0]},
-			).Insert(&node.Node{Id: 1, MBR: data[1]}).Insert(&node.Node{Id: 2, MBR: data[2]})
+				&node.Node{ MBR: data[0]},
+			).Insert(&node.Node{ MBR: data[1]}).Insert(&node.Node{ MBR: data[2]})
 			g.Assert(tree.data).Eql(tree2.data)
 		})
 

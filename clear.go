@@ -13,7 +13,7 @@ func emptyMBR() mbr.MBR {
 }
 
 func (tree *Hdb) Clear() *Hdb {
-	tree.data = createDBNode(nil, 1, true, []dbNode{}, )
+	tree.data = createDBNode(nil, 1, true, []dbNode{})
 	return tree
 }
 

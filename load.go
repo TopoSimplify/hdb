@@ -9,7 +9,7 @@ import (
 func (tree *Hdb) loadBoxes(data []mbr.MBR) *Hdb {
 	var items = make([]*node.Node, 0, len(data))
 	for i := range data {
-		items = append(items, &node.Node{Id: i, MBR: data[i]})
+		items = append(items, &node.Node{MBR: data[i]})
 	}
 	return tree.Load(items)
 }
