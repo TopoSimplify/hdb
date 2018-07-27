@@ -4,17 +4,14 @@ import (
 	"github.com/intdxdt/mbr"
 	"github.com/TopoSimplify/node"
 )
-//Insert item
-func (tree *Hdb) Insert(item *node.Node) *Hdb {
+
+//insert - private
+func (tree *Hdb) insert(item *node.Node) *Hdb {
 	if item == nil {
 		return tree
 	}
-	tree.insert(item, tree.data.height-1)
-	return tree
-}
+	var level = tree.data.height-1
 
-//insert - private
-func (tree *Hdb) insert(item *node.Node, level int) *Hdb {
 	var nd *dbNode
 	var insertPath = make([]*dbNode, 0, tree.maxEntries)
 

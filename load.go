@@ -7,27 +7,27 @@ import (
 
 //loadBoxes loads bounding boxes
 func (tree *Hdb) loadBoxes(data []mbr.MBR) *Hdb {
-	var items = make([]*node.Node, 0, len(data))
+	var items = make([]node.Node, 0, len(data))
 	for i := range data {
-		items = append(items, &node.Node{MBR: data[i]})
+		items = append(items, node.Node{MBR: data[i]})
 	}
 	return tree.Load(items)
 }
 
 //Load implements bulk loading
-func (tree *Hdb) Load(data []*node.Node) *Hdb {
-	var n  = len(data)
+func (tree *Hdb) Load(items []node.Node) *Hdb {
+	var n  = len(items)
 	if n < tree.minEntries {
-		for i := range data {
-			tree.Insert(data[i])
+		for i := range items {
+			tree.insert(&items[i])
 		}
 		return tree
 	}
 
-	//var data = make([]*node.Node, 0, n)
-	//for i := range items {
-	//	data = append(data, items[i])
-	//}
+	var data = make([]*node.Node,  n)
+	for i := range items {
+		data[i] =  &items[i]
+	}
 
 
 	// recursively build the tree with the given data from stratch using OMT algorithm

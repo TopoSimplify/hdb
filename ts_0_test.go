@@ -113,14 +113,14 @@ func TestRtreeRbush(t *testing.T) {
 		g.It("#load uses standard insertion when given a low number of items", func() {
 			var tree = NewHdb(8).loadBoxes(data)
 			tree.loadBoxes(data[0:3])
-			var tree2 = NewHdb(8).loadBoxes(data).Insert(
+			var tree2 = NewHdb(8).loadBoxes(data).insert(
 				&node.Node{ MBR: data[0]},
-			).Insert(&node.Node{ MBR: data[1]}).Insert(&node.Node{ MBR: data[2]})
+			).insert(&node.Node{ MBR: data[1]}).insert(&node.Node{ MBR: data[2]})
 			g.Assert(tree.data).Eql(tree2.data)
 		})
 
 		g.It("#load does nothing if loading empty data", func() {
-			var tree = NewHdb(0).Load(make([]*node.Node, 0))
+			var tree = NewHdb(0).Load(make([]node.Node, 0))
 			g.Assert(tree.IsEmpty()).IsTrue()
 		})
 
@@ -210,7 +210,7 @@ func TestRtreeRbush(t *testing.T) {
 			var data = []mbr.MBR{{0, 0, 0, 0}, {2, 2, 2, 2}, {1, 1, 1, 1},}
 			var tree = NewHdb(4)
 			tree.loadBoxes(data)
-			tree.Insert(&node.Node{MBR: mbr.CreateMBR(3, 3, 3, 3)})
+			tree.insert(&node.Node{MBR: mbr.CreateMBR(3, 3, 3, 3)})
 			g.Assert(tree.data.leaf).IsTrue()
 			g.Assert(tree.data.height).Equal(1)
 			var box = mbr.CreateMBR(0, 0, 3, 3)
@@ -223,13 +223,13 @@ func TestRtreeRbush(t *testing.T) {
 		g.It("#insert does nothing if given nil", func() {
 			var o *node.Node
 			var tree = NewHdb(4).loadBoxes(data)
-			g.Assert(tree.data).Eql(NewHdb(4).loadBoxes(data).Insert(o).data)
+			g.Assert(tree.data).Eql(NewHdb(4).loadBoxes(data).insert(o).data)
 		})
 
 		g.It("#insert forms a valid tree if items are inserted one by one", func() {
 			var tree = NewHdb(4)
 			for i := 0; i < len(data); i++ {
-				tree.Insert(&node.Node{MBR: data[i]})
+				tree.insert(&node.Node{MBR: data[i]})
 			}
 
 			var tree2 = NewHdb(4).loadBoxes(data)
@@ -288,7 +288,7 @@ func TestRtreeRbush(t *testing.T) {
 		})
 
 		g.It("should have chainable API", func() {
-			g.Assert(NewHdb(4).loadBoxes(data).Insert(
+			g.Assert(NewHdb(4).loadBoxes(data).insert(
 				&node.Node{MBR: data[0]},
 			).removeMBR(&data[0]).Clear().IsEmpty()).IsTrue()
 		})

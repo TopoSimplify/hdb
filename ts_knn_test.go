@@ -7,7 +7,7 @@ import (
 	"github.com/TopoSimplify/node"
 )
 
-var knnData []*node.Node
+var knnData []node.Node
 
 func scoreFn(query *mbr.MBR, boxer  *KObj) float64 {
 	return query.Distance(boxer.MBR)
@@ -30,9 +30,9 @@ func initKnn() {
 		{1, 14, 1, 14}, {33, 77, 34, 77}, {94, 56, 98, 59}, {75, 25, 78, 26}, {17, 73, 20, 74}, {11, 3, 12, 4}, {45, 12, 47, 12}, {38, 39, 39, 39},
 		{99, 3, 103, 5}, {41, 92, 44, 96}, {79, 40, 79, 41}, {29, 2, 29, 4},
 	}
-	knnData = make([]*node.Node, 0, len(dat))
+	knnData = make([]node.Node, 0, len(dat))
 	for i := range dat {
-		knnData = append(knnData, &node.Node{MBR: dat[i]})
+		knnData = append(knnData, node.Node{MBR: dat[i]})
 	}
 }
 

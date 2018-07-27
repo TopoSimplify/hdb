@@ -39,7 +39,7 @@ func TestRtreeBuild(t *testing.T) {
 			//one by one
 			db.loadBoxes(data)
 			//for i := range data {
-			//	//db.Insert(&data[i])
+			//	//db.insert(&data[i])
 			//	if i == 9 || i == 16 || i == 24 || i == 27 || i == 37 || i == 62 {
 			//		fmt.Println("\n\n")
 			//		print_rtree(db.data)

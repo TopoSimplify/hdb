@@ -109,7 +109,7 @@ func TestRtree(t *testing.T) {
 		var length = len(data)
 		var data1By1 = data[:length:length]
 		for i := range data1By1 {
-			tree.Insert(&node.Node{MBR: data1By1[i]})
+			tree.insert(&node.Node{MBR: data1By1[i]})
 		}
 
 		g.It("same root bounds for : bulkload & single insert ", func() {
@@ -123,11 +123,11 @@ func TestRtree(t *testing.T) {
 			var dataOnebyone = data[:length:length]
 			for i := range dataOnebyone {
 				//fmt.Println(i, " -> ", len(oneT.data.children))
-				oneT.Insert(&node.Node{MBR: dataOnebyone[i]})
+				oneT.insert(&node.Node{MBR: dataOnebyone[i]})
 			}
 			//fill zero size
 			for i := range dataOnebyone {
-				oneDeft.Insert(&node.Node{MBR: dataOnebyone[i]})
+				oneDeft.insert(&node.Node{MBR: dataOnebyone[i]})
 			}
 
 			var oneMbr = oneT.data.bbox
@@ -137,9 +137,9 @@ func TestRtree(t *testing.T) {
 
 			//bulkload
 			var dataBulkload = data[:length:length]
-			var bulkItems = make([]*node.Node, len(dataBulkload))
+			var bulkItems = make([]node.Node, len(dataBulkload))
 			for i := range bulkItems {
-				bulkItems[i] = &node.Node{MBR: dataBulkload[i]}
+				bulkItems[i] = node.Node{MBR: dataBulkload[i]}
 			}
 			bulkT.Load(bulkItems)
 			bukMbr := bulkT.data.bbox
@@ -175,7 +175,7 @@ func TestRtree(t *testing.T) {
 		var length = len(data)
 		var dataOnebyone = data[:length:length]
 		for i := range dataOnebyone {
-			tree.Insert(&node.Node{MBR: dataOnebyone[i]})
+			tree.insert(&node.Node{MBR: dataOnebyone[i]})
 		}
 
 		g.It("same root bounds for : bulkload & single insert ", func() {
@@ -217,14 +217,14 @@ func TestRtree(t *testing.T) {
 		var length = len(data)
 		var dataOnebyone = data[:length:length]
 		var dataBulkload = data[:length:length]
-		var bulkItems = make([]*node.Node, len(dataBulkload))
+		var bulkItems = make([]node.Node, len(dataBulkload))
 
 		for i := range bulkItems {
-			bulkItems[i] = &node.Node{MBR: dataBulkload[i]}
+			bulkItems[i] = node.Node{MBR: dataBulkload[i]}
 		}
 
 		for i := range dataOnebyone {
-			tree.Insert(&node.Node{MBR: dataOnebyone[i]})
+			tree.insert(&node.Node{MBR: dataOnebyone[i]})
 		}
 		bulkTree.Load(bulkItems)
 

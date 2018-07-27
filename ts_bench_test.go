@@ -42,7 +42,7 @@ var foundTotal int
 func Benchmark_Insert_OneByOne_SmallBigData(b *testing.B) {
 	var tree = NewHdb(maxFill)
 	for i := 0; i < len(BenchData); i++ {
-		tree.Insert(&node.Node{MBR: BenchData[i]})
+		tree.insert(&node.Node{MBR: BenchData[i]})
 	}
 	box = tree.data.BBox()
 }
