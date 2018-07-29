@@ -125,7 +125,7 @@ func fnRichData() []*node.Node {
 		{3, 4, 3, 4}, {2.5, 4, 2.5, 4},
 	}
 	for i := range data {
-		richData = append(richData, &node.Node{MBR: data[i]})
+		richData = append(richData, &node.Node{Id:id.Next(),MBR: data[i]})
 	}
 	return richData
 }
@@ -135,7 +135,7 @@ func TestQobj_String(t *testing.T) {
 	g.Describe("", func() {
 		g.It("test qobject", func() {
 			var box = mbr.MBR{3, 3, 3, 3}
-			var obj = &node.Node{MBR: box}
+			var obj = &node.Node{Id:id.Next(),MBR: box}
 			var nd  = newLeafNode(obj)
 			var qo = &KObj{&nd, &box, true, 3.4}
 			g.Assert(box.String() + " -> 3.4").Equal(qo.String())

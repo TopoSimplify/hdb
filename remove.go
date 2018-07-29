@@ -88,7 +88,7 @@ func (tree *Hdb) Remove(item *node.Node) *Hdb {
 		return tree
 	}
 	tree.removeItem(&item.MBR, func(nd *dbNode, i int) bool {
-		return nd.children[i].item == item
+		return nd.children[i].item.Id == item.Id
 	})
 	return tree
 }

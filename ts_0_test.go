@@ -7,6 +7,7 @@ import (
 	"github.com/franela/goblin"
 	"time"
 	"github.com/TopoSimplify/node"
+	"github.com/intdxdt/iter"
 )
 
 type Boxes []mbr.MBR
@@ -72,17 +73,18 @@ var data = []mbr.MBR{{0, 0, 0, 0}, {10, 10, 10, 10}, {20, 20, 20, 20}, {25, 0, 2
 	{85, 60, 85, 60}, {95, 70, 95, 70}, {50, 75, 50, 75}, {60, 85, 60, 85}, {70, 95, 70, 95}, {75, 75, 75, 75}, {85, 85, 85, 85}, {95, 95, 95, 95}}
 
 func TestRtreeRbush(t *testing.T) {
-	g := goblin.Goblin(t)
+	var g = goblin.Goblin(t)
+	var id = iter.NewIntGen(0)
 
 	g.Describe("Hdb Tests - From Rbush", func() {
 		g.It("should test load 9 & 10", func() {
-			var tree0 = NewHdb().loadBoxes(someData(0))
+			var tree0 = NewHdb().loadBoxes(id, someData(0))
 			g.Assert(tree0.data.height).Equal(1)
 
-			var tree1 = NewHdb(8).loadBoxes(someData(8))
+			var tree1 = NewHdb(8).loadBoxes(id, someData(8))
 			g.Assert(tree1.data.height).Equal(1)
 
-			var tree2 = NewHdb(8).loadBoxes(someData(10))
+			var tree2 = NewHdb(8).loadBoxes(id, someData(10))
 			g.Assert(tree2.data.height).Equal(2)
 		})
 
@@ -91,7 +93,7 @@ func TestRtreeRbush(t *testing.T) {
 				{-115, 45, -105, 55}, {105, 45, 115, 55}, {105, -55, 115, -45}, {-115, -55, -105, -45},
 			}
 			var tree = NewHdb(4)
-			tree.loadBoxes(data)
+			tree.loadBoxes(id, data)
 			testResults(g, tree.Search(mbr.CreateMBR(-180, -90, 180, 90)), []mbr.MBR{
 				{-115, 45, -105, 55}, {105, 45, 115, 55}, {105, -55, 115, -45}, {-115, -55, -105, -45},
 			})
@@ -111,11 +113,19 @@ func TestRtreeRbush(t *testing.T) {
 		})
 
 		g.It("#load uses standard insertion when given a low number of items", func() {
-			var tree = NewHdb(8).loadBoxes(data)
-			tree.loadBoxes(data[0:3])
-			var tree2 = NewHdb(8).loadBoxes(data).insert(
-				&node.Node{ MBR: data[0]},
-			).insert(&node.Node{ MBR: data[1]}).insert(&node.Node{ MBR: data[2]})
+			var id = iter.NewIntGen(0)
+			var id2 = iter.NewIntGen(0)
+
+			var tree = NewHdb(8).loadBoxes(id, data).loadBoxes(id, data[0:3])
+
+			var tree2 = NewHdb(8).loadBoxes(id2, data).insert(
+				&node.Node{Id: id2.Next(), MBR: data[0]},
+			).insert(
+				&node.Node{Id: id2.Next(), MBR: data[1]},
+			).insert(
+				&node.Node{Id: id2.Next(), MBR: data[2]},
+			)
+
 			g.Assert(tree.data).Eql(tree2.data)
 		})
 
@@ -129,10 +139,10 @@ func TestRtreeRbush(t *testing.T) {
 			for i := 0; i < len(data); i++ {
 				cloneData[i] = data[i].Clone()
 			}
-			for i := 0; i < len(data); i++ {
+			for i := range data {
 				cloneData = append(cloneData, data[i].Clone())
 			}
-			var tree = NewHdb(4).loadBoxes(data).loadBoxes(data)
+			var tree = NewHdb(4).loadBoxes(id, data).loadBoxes(id, data)
 			testResults(g, tree.All(), cloneData)
 		})
 
@@ -146,8 +156,8 @@ func TestRtreeRbush(t *testing.T) {
 				cloneData = append(cloneData, smaller[i].Clone())
 			}
 
-			var tree1 = NewHdb(4).loadBoxes(data).loadBoxes(smaller)
-			var tree2 = NewHdb(4).loadBoxes(smaller).loadBoxes(data)
+			var tree1 = NewHdb(4).loadBoxes(id, data).loadBoxes(id, smaller)
+			var tree2 = NewHdb(4).loadBoxes(id, smaller).loadBoxes(id, data)
 			g.Assert(tree1.data.height).Equal(tree2.data.height)
 			testResults(g, tree1.All(), cloneData)
 			testResults(g, tree2.All(), cloneData)
@@ -166,15 +176,15 @@ func TestRtreeRbush(t *testing.T) {
 				cloneData = append(cloneData, smaller[i].Clone())
 			}
 
-			var tree1 = NewHdb(64).loadBoxes(larger).loadBoxes(smaller)
-			var tree2 = NewHdb(64).loadBoxes(smaller).loadBoxes(larger)
+			var tree1 = NewHdb(64).loadBoxes(id, larger).loadBoxes(id, smaller)
+			var tree2 = NewHdb(64).loadBoxes(id, smaller).loadBoxes(id, larger)
 			g.Assert(tree1.data.height).Equal(tree2.data.height)
 			testResults(g, tree1.All(), cloneData)
 			testResults(g, tree2.All(), cloneData)
 		})
 
 		g.It("#search finds matching points in the tree given a bbox", func() {
-			var tree = NewHdb(4).loadBoxes(data)
+			var tree = NewHdb(4).loadBoxes(id, data)
 			var result = tree.Search(mbr.CreateMBR(40, 20, 80, 70))
 			testResults(g, result, []mbr.MBR{
 				{70, 20, 70, 20}, {75, 25, 75, 25}, {45, 45, 45, 45}, {50, 50, 50, 50}, {60, 60, 60, 60}, {70, 70, 70, 70},
@@ -183,13 +193,13 @@ func TestRtreeRbush(t *testing.T) {
 		})
 
 		g.It("#collides returns true when search finds matching points", func() {
-			var tree = NewHdb(4).loadBoxes(data)
+			var tree = NewHdb(4).loadBoxes(id, data)
 			g.Assert(tree.Collides(mbr.CreateMBR(40, 20, 80, 70))).IsTrue()
 			g.Assert(tree.Collides(mbr.CreateMBR(200, 200, 210, 210))).IsFalse()
 		})
 
 		g.It("#search returns an empty array if nothing found", func() {
-			var result = NewHdb(4).loadBoxes(data).Search(
+			var result = NewHdb(4).loadBoxes(id, data).Search(
 				mbr.CreateMBR(200, 200, 210, 210),
 			)
 			g.Assert(len(result)).Equal(0)
@@ -201,7 +211,7 @@ func TestRtreeRbush(t *testing.T) {
 				cloneData[i] = data[i]
 			}
 
-			var tree = NewHdb(4).loadBoxes(data)
+			var tree = NewHdb(4).loadBoxes(id, data)
 			var result = tree.Search(mbr.CreateMBR(0, 0, 100, 100))
 			testResults(g, result, cloneData)
 		})
@@ -209,10 +219,11 @@ func TestRtreeRbush(t *testing.T) {
 		g.It("#insert adds an item to an existing tree correctly", func() {
 			var data = []mbr.MBR{{0, 0, 0, 0}, {2, 2, 2, 2}, {1, 1, 1, 1},}
 			var tree = NewHdb(4)
-			tree.loadBoxes(data)
-			tree.insert(&node.Node{MBR: mbr.CreateMBR(3, 3, 3, 3)})
+			tree.loadBoxes(id, data)
+			tree.insert(&node.Node{Id: id.Next(), MBR: mbr.CreateMBR(3, 3, 3, 3)})
 			g.Assert(tree.data.leaf).IsTrue()
 			g.Assert(tree.data.height).Equal(1)
+
 			var box = mbr.CreateMBR(0, 0, 3, 3)
 			g.Assert(tree.data.bbox.Equals(&box)).IsTrue()
 			testResults(g, getObjs(tree.data.children), []mbr.MBR{
@@ -222,17 +233,19 @@ func TestRtreeRbush(t *testing.T) {
 
 		g.It("#insert does nothing if given nil", func() {
 			var o *node.Node
-			var tree = NewHdb(4).loadBoxes(data)
-			g.Assert(tree.data).Eql(NewHdb(4).loadBoxes(data).insert(o).data)
+			var id = iter.NewIntGen(0)
+			var id2 = iter.NewIntGen(0)
+			var tree = NewHdb(4).loadBoxes(id, data)
+			g.Assert(tree.data).Eql(NewHdb(4).loadBoxes(id2, data).insert(o).data)
 		})
 
 		g.It("#insert forms a valid tree if items are inserted one by one", func() {
 			var tree = NewHdb(4)
 			for i := 0; i < len(data); i++ {
-				tree.insert(&node.Node{MBR: data[i]})
+				tree.insert(&node.Node{Id: id.Next(), MBR: data[i]})
 			}
 
-			var tree2 = NewHdb(4).loadBoxes(data)
+			var tree2 = NewHdb(4).loadBoxes(id, data)
 			g.Assert(tree.data.height-tree2.data.height <= 1).IsTrue()
 
 			var boxes2 = make([]mbr.MBR, 0)
@@ -244,7 +257,7 @@ func TestRtreeRbush(t *testing.T) {
 		})
 
 		g.It("#remove removes items correctly", func() {
-			var tree = NewHdb(4).loadBoxes(data)
+			var tree = NewHdb(4).loadBoxes(id, data)
 			var N = len(data)
 			tree.removeMBR(&data[0])
 			tree.removeMBR(&data[1])
@@ -259,55 +272,63 @@ func TestRtreeRbush(t *testing.T) {
 			}
 
 			testResults(g, tree.All(), cloneData)
-
 		})
 
 		g.It("#remove does nothing if nothing found", func() {
 			var item *node.Node
-			var tree = NewHdb(0).loadBoxes(data)
-			var tree2 = NewHdb(0).loadBoxes(data)
+			var id = iter.NewIntGen(0)
+			var id2 = iter.NewIntGen(0)
+
+			var tree = NewHdb(0).loadBoxes(id, data)
+			var tree2 = NewHdb(0).loadBoxes(id2, data)
+
 			var query = mbr.CreateMBR(13, 13, 13, 13)
-			var querybox = &node.Node{MBR: mbr.CreateMBR(13, 13, 13, 13)}
+			var results13 = tree2.Search(query)
+			var node13 *node.Node
+			for i := range results13 {
+				if results13[i].MBR.Equals(&query) {
+					node13 = results13[i]
+				}
+			}
+			var querybox = node13
 			g.Assert(tree.data).Eql(tree2.removeMBR(&query).data)
 			g.Assert(tree.data).Eql(tree2.Remove(querybox).data)
 			g.Assert(tree.data).Eql(tree2.Remove(item).data)
 		})
 
 		g.It("#remove brings the tree to a clear state when removing everything one by one", func() {
-			var tree = NewHdb(4).loadBoxes(data)
+			var tree = NewHdb(4).loadBoxes(id, data)
 			var result = tree.Search(mbr.CreateMBR(0, 0, 100, 100))
-			for i := 0; i < len(result); i++ {
+			for i := range result {
 				tree.Remove(result[i])
 			}
 			g.Assert(tree.Remove(&node.Node{}).IsEmpty()).IsTrue()
 		})
 
 		g.It("#clear should clear all the data in the tree", func() {
-			var tree = NewHdb(4).loadBoxes(data).Clear()
+			var tree = NewHdb(4).loadBoxes(id, data).Clear()
 			g.Assert(tree.IsEmpty()).IsTrue()
 		})
 
 		g.It("should have chainable API", func() {
-			g.Assert(NewHdb(4).loadBoxes(data).insert(
-				&node.Node{MBR: data[0]},
+			g.Assert(NewHdb(4).loadBoxes(id, data).insert(
+				&node.Node{Id: id.Next(), MBR: data[0]},
 			).removeMBR(&data[0]).Clear().IsEmpty()).IsTrue()
 		})
 	})
 
 }
 
-/*
-	g := goblin.Goblin(t)
-	g.Describe("Hdb Tests - From Rbush", func() {
- */
 func TestRtreeUtil(t *testing.T) {
-	g := goblin.Goblin(t)
+	var g = goblin.Goblin(t)
+	var id = iter.NewIntGen(0)
 	g.Describe("Hdb Util", func() {
 		g.It("tests pop nodes", func() {
 			g.Timeout(1 * time.Hour)
-			var a = createDBNode(&node.Node{MBR: emptyMBR()}, 0, true, nil)
-			var b = createDBNode(&node.Node{MBR: emptyMBR()}, 1, true, nil)
-			var c = createDBNode(&node.Node{MBR: emptyMBR()}, 1, true, nil)
+
+			var a = createDBNode(&node.Node{Id: id.Next(), MBR: emptyMBR()}, 0, true, nil)
+			var b = createDBNode(&node.Node{Id: id.Next(), MBR: emptyMBR()}, 1, true, nil)
+			var c = createDBNode(&node.Node{Id: id.Next(), MBR: emptyMBR()}, 1, true, nil)
 			var nodes = make([]*dbNode, 0)
 			var n *dbNode
 
@@ -333,12 +354,12 @@ func TestRtreeUtil(t *testing.T) {
 			g.Assert(len(nodes)).Equal(0)
 			g.Assert(n == nil).IsTrue()
 
-			var nodes_abc = []dbNode{a, b, c}
-			g.Assert(len(nodes_abc)).Equal(3)
-			nodes_abc = removeNode(nodes_abc, 1)
-			g.Assert(len(nodes_abc)).Equal(2)
-			nodes_abc = removeNode(nodes_abc, 4)
-			g.Assert(len(nodes_abc)).Equal(2)
+			var nodesABC = []dbNode{a, b, c}
+			g.Assert(len(nodesABC)).Equal(3)
+			nodesABC = removeNode(nodesABC, 1)
+			g.Assert(len(nodesABC)).Equal(2)
+			nodesABC = removeNode(nodesABC, 4)
+			g.Assert(len(nodesABC)).Equal(2)
 
 		})
 

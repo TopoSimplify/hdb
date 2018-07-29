@@ -6,6 +6,7 @@ import (
 	"github.com/intdxdt/mbr"
 	"github.com/franela/goblin"
 	"time"
+	"github.com/intdxdt/iter"
 )
 
 func print_rtree(n *dbNode) {
@@ -19,7 +20,8 @@ func print_rtree(n *dbNode) {
 }
 
 func TestRtreeBuild(t *testing.T) {
-	g := goblin.Goblin(t)
+	var g = goblin.Goblin(t)
+	var id = iter.NewIntGen(0)
 
 	g.Describe("build Hdb by bulkload and onebyone insert", func() {
 
@@ -37,7 +39,7 @@ func TestRtreeBuild(t *testing.T) {
 			g.Timeout(1 * time.Hour)
 			var db = NewHdb(9)
 			//one by one
-			db.loadBoxes(data)
+			db.loadBoxes(id, data)
 			//for i := range data {
 			//	//db.insert(&data[i])
 			//	if i == 9 || i == 16 || i == 24 || i == 27 || i == 37 || i == 62 {

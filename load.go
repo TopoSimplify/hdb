@@ -3,20 +3,21 @@ package hdb
 import (
 	"github.com/intdxdt/mbr"
 	"github.com/TopoSimplify/node"
+	"github.com/intdxdt/iter"
 )
 
 //loadBoxes loads bounding boxes
-func (tree *Hdb) loadBoxes(data []mbr.MBR) *Hdb {
+func (tree *Hdb) loadBoxes(id *iter.IntGen, data []mbr.MBR) *Hdb {
 	var items = make([]node.Node, 0, len(data))
 	for i := range data {
-		items = append(items, node.Node{MBR: data[i]})
+		items = append(items, node.Node{Id: id.Next(), MBR: data[i]})
 	}
 	return tree.Load(items)
 }
 
 //Load implements bulk loading
 func (tree *Hdb) Load(items []node.Node) *Hdb {
-	var n  = len(items)
+	var n = len(items)
 	if n < tree.minEntries {
 		for i := range items {
 			tree.insert(&items[i])
@@ -24,11 +25,10 @@ func (tree *Hdb) Load(items []node.Node) *Hdb {
 		return tree
 	}
 
-	var data = make([]*node.Node,  n)
+	var data = make([]*node.Node, n)
 	for i := range items {
-		data[i] =  &items[i]
+		data[i] = &items[i]
 	}
-
 
 	// recursively build the tree with the given data from stratch using OMT algorithm
 	var nd = tree.buildTree(data, 0, n-1, 0)

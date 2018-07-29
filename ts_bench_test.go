@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"github.com/intdxdt/mbr"
 	"github.com/TopoSimplify/node"
+	"github.com/intdxdt/iter"
 )
 
 func RandBox(size float64, rnd *rand.Rand) mbr.MBR {
@@ -29,33 +30,39 @@ func GenDataItems(N int, size float64) []mbr.MBR {
 	return data
 }
 
-var N = int(1e6)
-var maxFill = 64
-var BenchData = GenDataItems(N, 1)
-var bboxes100 = GenDataItems(1000, 100*math.Sqrt(0.1))
-var bboxes10 = GenDataItems(1000, 10)
-var bboxes1 = GenDataItems(1000, 1)
-var tree = NewHdb(maxFill).loadBoxes(BenchData)
+var N           = int(1e6)
+var maxFill     = 64
+var BenchData   = GenDataItems(N, 1)
+var bboxes100   = GenDataItems(1000, 100*math.Sqrt(0.1))
+var bboxes10    = GenDataItems(1000, 10)
+var bboxes1     = GenDataItems(1000, 1)
+
+var id = iter.NewIntGen(0)
+var tree = NewHdb(maxFill).loadBoxes(id, BenchData)
+
 var box *mbr.MBR
 var foundTotal int
 
 func Benchmark_Insert_OneByOne_SmallBigData(b *testing.B) {
+	var id = iter.NewIntGen(0)
 	var tree = NewHdb(maxFill)
 	for i := 0; i < len(BenchData); i++ {
-		tree.insert(&node.Node{MBR: BenchData[i]})
+		tree.insert(&node.Node{Id: id.Next(), MBR: BenchData[i]})
 	}
 	box = tree.data.BBox()
 }
 
 func Benchmark_Load_Data(b *testing.B) {
+	var id = iter.NewIntGen(0)
 	var tree = NewHdb(maxFill)
-	tree.loadBoxes(BenchData)
+	tree.loadBoxes(id, BenchData)
 	box = tree.data.BBox()
 }
 
 func Benchmark_Insert_Load_SmallBigData(b *testing.B) {
+	var id = iter.NewIntGen(0)
 	var tree = NewHdb(maxFill)
-	tree.loadBoxes(BenchData)
+	tree.loadBoxes(id, BenchData)
 	box = tree.data.BBox()
 }
 
@@ -89,7 +96,8 @@ func BenchmarkRTree_Search_1000_01pct(b *testing.B) {
 }
 
 func BenchmarkRTree_Build_And_Remove1000(b *testing.B) {
-	var tree = NewHdb(maxFill).loadBoxes(BenchData)
+	var id = iter.NewIntGen(0)
+	var tree = NewHdb(maxFill).loadBoxes(id, BenchData)
 	for i := 0; i < 1000; i++ {
 		tree = tree.removeMBR(&BenchData[i])
 	}
