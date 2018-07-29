@@ -7,7 +7,7 @@ import (
 )
 
 //loadBoxes loads bounding boxes
-func (tree *Hdb) loadBoxes(id *iter.IntGen, data []mbr.MBR) *Hdb {
+func (tree *Hdb) loadBoxes(id *iter.Igen, data []mbr.MBR) *Hdb {
 	var items = make([]node.Node, 0, len(data))
 	for i := range data {
 		items = append(items, node.Node{Id: id.Next(), MBR: data[i]})

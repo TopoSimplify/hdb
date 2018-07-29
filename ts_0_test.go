@@ -74,7 +74,7 @@ var data = []mbr.MBR{{0, 0, 0, 0}, {10, 10, 10, 10}, {20, 20, 20, 20}, {25, 0, 2
 
 func TestRtreeRbush(t *testing.T) {
 	var g = goblin.Goblin(t)
-	var id = iter.NewIntGen(0)
+	var id = iter.NewIgen(0)
 
 	g.Describe("Hdb Tests - From Rbush", func() {
 		g.It("should test load 9 & 10", func() {
@@ -113,8 +113,8 @@ func TestRtreeRbush(t *testing.T) {
 		})
 
 		g.It("#load uses standard insertion when given a low number of items", func() {
-			var id = iter.NewIntGen(0)
-			var id2 = iter.NewIntGen(0)
+			var id = iter.NewIgen(0)
+			var id2 = iter.NewIgen(0)
 
 			var tree = NewHdb(8).loadBoxes(id, data).loadBoxes(id, data[0:3])
 
@@ -233,8 +233,8 @@ func TestRtreeRbush(t *testing.T) {
 
 		g.It("#insert does nothing if given nil", func() {
 			var o *node.Node
-			var id = iter.NewIntGen(0)
-			var id2 = iter.NewIntGen(0)
+			var id = iter.NewIgen(0)
+			var id2 = iter.NewIgen(0)
 			var tree = NewHdb(4).loadBoxes(id, data)
 			g.Assert(tree.data).Eql(NewHdb(4).loadBoxes(id2, data).insert(o).data)
 		})
@@ -276,8 +276,8 @@ func TestRtreeRbush(t *testing.T) {
 
 		g.It("#remove does nothing if nothing found", func() {
 			var item *node.Node
-			var id = iter.NewIntGen(0)
-			var id2 = iter.NewIntGen(0)
+			var id = iter.NewIgen(0)
+			var id2 = iter.NewIgen(0)
 
 			var tree = NewHdb(0).loadBoxes(id, data)
 			var tree2 = NewHdb(0).loadBoxes(id2, data)
@@ -321,7 +321,7 @@ func TestRtreeRbush(t *testing.T) {
 
 func TestRtreeUtil(t *testing.T) {
 	var g = goblin.Goblin(t)
-	var id = iter.NewIntGen(0)
+	var id = iter.NewIgen(0)
 	g.Describe("Hdb Util", func() {
 		g.It("tests pop nodes", func() {
 			g.Timeout(1 * time.Hour)

@@ -55,7 +55,7 @@ func printRtree(a *dbNode) []*nodeParent {
 
 func TestRtree(t *testing.T) {
 	var g = goblin.Goblin(t)
-	var id = iter.NewIntGen(0)
+	var id = iter.NewIgen(0)
 
 	g.Describe("Hdb : dbNode, leaf, inode", func() {
 		var pt = &Pnt{0, 0}

@@ -37,14 +37,14 @@ var bboxes100   = GenDataItems(1000, 100*math.Sqrt(0.1))
 var bboxes10    = GenDataItems(1000, 10)
 var bboxes1     = GenDataItems(1000, 1)
 
-var id = iter.NewIntGen(0)
+var id = iter.NewIgen(0)
 var tree = NewHdb(maxFill).loadBoxes(id, BenchData)
 
 var box *mbr.MBR
 var foundTotal int
 
 func Benchmark_Insert_OneByOne_SmallBigData(b *testing.B) {
-	var id = iter.NewIntGen(0)
+	var id = iter.NewIgen(0)
 	var tree = NewHdb(maxFill)
 	for i := 0; i < len(BenchData); i++ {
 		tree.insert(&node.Node{Id: id.Next(), MBR: BenchData[i]})
@@ -53,14 +53,14 @@ func Benchmark_Insert_OneByOne_SmallBigData(b *testing.B) {
 }
 
 func Benchmark_Load_Data(b *testing.B) {
-	var id = iter.NewIntGen(0)
+	var id = iter.NewIgen(0)
 	var tree = NewHdb(maxFill)
 	tree.loadBoxes(id, BenchData)
 	box = tree.data.BBox()
 }
 
 func Benchmark_Insert_Load_SmallBigData(b *testing.B) {
-	var id = iter.NewIntGen(0)
+	var id = iter.NewIgen(0)
 	var tree = NewHdb(maxFill)
 	tree.loadBoxes(id, BenchData)
 	box = tree.data.BBox()
@@ -96,7 +96,7 @@ func BenchmarkRTree_Search_1000_01pct(b *testing.B) {
 }
 
 func BenchmarkRTree_Build_And_Remove1000(b *testing.B) {
-	var id = iter.NewIntGen(0)
+	var id = iter.NewIgen(0)
 	var tree = NewHdb(maxFill).loadBoxes(id, BenchData)
 	for i := 0; i < 1000; i++ {
 		tree = tree.removeMBR(&BenchData[i])

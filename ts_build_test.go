@@ -21,7 +21,7 @@ func print_rtree(n *dbNode) {
 
 func TestRtreeBuild(t *testing.T) {
 	var g = goblin.Goblin(t)
-	var id = iter.NewIntGen(0)
+	var id = iter.NewIgen(0)
 
 	g.Describe("build Hdb by bulkload and onebyone insert", func() {
 
