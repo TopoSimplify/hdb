@@ -1,5 +1,4 @@
 package hdb
-
 /*
  (c) 2015, Titus Tienaah
  A library for 2D spatial indexing of points and rectangles.

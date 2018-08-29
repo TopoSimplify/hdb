@@ -14,7 +14,7 @@ func calcBBox(nd *dbNode) {
 func distBBox(nd *dbNode, k, p int) mbr.MBR {
 	var bbox = emptyMBR()
 	for i := k; i < p; i++ {
-		extend(&bbox, &nd.children[i].bbox)
+		bbox.ExpandIncludeMBR(&nd.children[i].bbox)
 	}
 	return bbox
 }
@@ -36,12 +36,12 @@ func (tree *Hdb) allDistMargin(nd *dbNode, m, M int, sortBy sortBy) float64 {
 	var margin = bboxMargin(&leftBBox) + bboxMargin(&rightBBox)
 
 	for i = m; i < M-m; i++ {
-		extend(&leftBBox, &nd.children[i].bbox)
+		leftBBox.ExpandIncludeMBR(&nd.children[i].bbox)
 		margin += bboxMargin(&leftBBox)
 	}
 
 	for i = M - m - 1; i >= m; i-- {
-		extend(&rightBBox, &nd.children[i].bbox)
+		rightBBox.ExpandIncludeMBR(&nd.children[i].bbox)
 		margin += bboxMargin(&rightBBox)
 	}
 	return margin

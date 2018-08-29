@@ -61,7 +61,7 @@ func TestRtree(t *testing.T) {
 		var pt = &Pnt{0, 0}
 		pt.BBox()
 		var item = &node.Node{Id: id.Next(), MBR: pt.Bounds()}
-		var pth NodePath
+		var pth nodePath
 		var b = createDBNode(item, 0, true, nil)
 
 		pth = append(pth, b)
@@ -71,7 +71,7 @@ func TestRtree(t *testing.T) {
 		n := createDBNode(item, 1, false, pth)
 
 		var items = make([]*node.Node, 0, 10)
-		var nodes NodePath
+		var nodes nodePath
 
 		items = append(items, item)
 		nodes = append(nodes, b)

@@ -40,8 +40,8 @@ var bboxes1     = GenDataItems(1000, 1)
 var id = iter.NewIgen(0)
 var tree = NewHdb(maxFill).loadBoxes(id, BenchData)
 
-var box *mbr.MBR
-var foundTotal int
+var box_g  = []*mbr.MBR{nil }
+var foundTotal = []int{-9}
 
 func Benchmark_Insert_OneByOne_SmallBigData(b *testing.B) {
 	var id = iter.NewIgen(0)
@@ -49,21 +49,21 @@ func Benchmark_Insert_OneByOne_SmallBigData(b *testing.B) {
 	for i := 0; i < len(BenchData); i++ {
 		tree.insert(&node.Node{Id: id.Next(), MBR: BenchData[i]})
 	}
-	box = tree.data.BBox()
+	box_g[0] = tree.data.BBox()
 }
 
 func Benchmark_Load_Data(b *testing.B) {
 	var id = iter.NewIgen(0)
 	var tree = NewHdb(maxFill)
 	tree.loadBoxes(id, BenchData)
-	box = tree.data.BBox()
+	box_g[0] = tree.data.BBox()
 }
 
 func Benchmark_Insert_Load_SmallBigData(b *testing.B) {
 	var id = iter.NewIgen(0)
 	var tree = NewHdb(maxFill)
 	tree.loadBoxes(id, BenchData)
-	box = tree.data.BBox()
+	box_g[0] = tree.data.BBox()
 }
 
 func BenchmarkRTree_Search_1000_10pct(b *testing.B) {
@@ -73,7 +73,7 @@ func BenchmarkRTree_Search_1000_10pct(b *testing.B) {
 		items = tree.Search(bboxes100[i])
 		found += len(items)
 	}
-	foundTotal = found
+	foundTotal[0] = found
 }
 func BenchmarkRTree_Search_1000_1pct(b *testing.B) {
 	var found = 0
@@ -82,7 +82,7 @@ func BenchmarkRTree_Search_1000_1pct(b *testing.B) {
 		items = tree.Search(bboxes10[i])
 		found += len(items)
 	}
-	foundTotal = found
+	foundTotal[0] = found
 }
 
 func BenchmarkRTree_Search_1000_01pct(b *testing.B) {
@@ -92,7 +92,7 @@ func BenchmarkRTree_Search_1000_01pct(b *testing.B) {
 		items = tree.Search(bboxes1[i])
 		found += len(items)
 	}
-	foundTotal = found
+	foundTotal[0] = found
 }
 
 func BenchmarkRTree_Build_And_Remove1000(b *testing.B) {
@@ -101,5 +101,5 @@ func BenchmarkRTree_Build_And_Remove1000(b *testing.B) {
 	for i := 0; i < 1000; i++ {
 		tree = tree.removeMBR(&BenchData[i])
 	}
-	box = tree.data.BBox()
+	box_g[0] = tree.data.BBox()
 }

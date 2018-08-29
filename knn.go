@@ -23,7 +23,7 @@ func (tree *Hdb) Knn(
 	var result []*node.Node
 	var child *dbNode
 	var stop, pred bool
-	var queue = heap.NewHeap(kObjCmp, heap.NewHeapType().AsMin())
+	var queue = heap.NewHeap(kobjCmp, heap.NewHeapType().AsMin())
 
 	for !stop && (nd != nil) {
 		for i := range nd.children {

@@ -5,6 +5,7 @@ import (
 	"github.com/intdxdt/mbr"
 	"github.com/franela/goblin"
 	"github.com/TopoSimplify/node"
+	"time"
 )
 
 var knnData []node.Node
@@ -112,20 +113,15 @@ func TestRtreeKNNPredScore(t *testing.T) {
 	})
 }
 
-type RichData struct {
-	*mbr.MBR
-	version int
-}
-
-func fnRichData() []*node.Node {
-	var richData = make([]*node.Node, 0)
+func fnRichData() []node.Node {
+	var richData = make([]node.Node, 0)
 	var data = []mbr.MBR{
 		{1, 2, 1, 2}, {3, 3, 3, 3}, {5, 5, 5, 5},
 		{4, 2, 4, 2}, {2, 4, 2, 4}, {5, 3, 5, 3},
 		{3, 4, 3, 4}, {2.5, 4, 2.5, 4},
 	}
 	for i := range data {
-		richData = append(richData, &node.Node{Id:id.Next(),MBR: data[i]})
+		richData = append(richData, node.Node{Id:i+1,MBR: data[i]})
 	}
 	return richData
 }
@@ -143,29 +139,29 @@ func TestQobj_String(t *testing.T) {
 	})
 }
 
-//func TestRtreeKNNPredicate(t *testing.T) {
-//	g := goblin.Goblin(t)
-//	g.Describe("Hdb Knn Predicate", func() {
-//		g.It("find n neighbours that do satisfy a given predicate", func() {
-//			g.Timeout(1 * time.Hour)
-//			var rt = NewHdb(9)
-//			rt.Load(fnRichData())
-//
-//			var scoreFn = func(query *mbr.MBR, boxer *KObj) float64 {
-//				return query.Distance(boxer.MBR)
-//			}
-//			var predicate = func(v *KObj) (bool, bool) {
-//				return v.GetNode().Object.(*RichData).version < 5, false
-//			}
-//			var result = rt.Knn(mbr.CreateMBR(2, 4, 2, 4), 1, scoreFn, predicate)
-//
-//			g.Assert(len(result)).Equal(1)
-//
-//			var v = result[0].Object.(*RichData)
-//			var expectsVersion = 2
-//
-//			g.Assert(v.MBR.Equals(&mbr.MBR{3, 3, 3, 3})).IsTrue()
-//			g.Assert(v.version).Equal(expectsVersion)
-//		})
-//	})
-//}
+func TestRtreeKNNPredicate(t *testing.T) {
+	g := goblin.Goblin(t)
+	g.Describe("Rtree Knn Predicate", func() {
+		g.It("find n neighbours that do satisfy a given predicate", func() {
+			g.Timeout(1 * time.Hour)
+			var rt = NewHdb(9)
+			rt.Load(fnRichData())
+
+			var scoreFn = func(query *mbr.MBR, boxer *KObj) float64 {
+				return query.Distance(boxer.MBR)
+			}
+			var predicate = func(v *KObj) (bool, bool) {
+				return v.dbNode.item.Id < 5, false
+			}
+			var result = rt.Knn(mbr.CreateMBR(2, 4, 2, 4), 1, scoreFn, predicate)
+
+			g.Assert(len(result)).Equal(1)
+
+			var v = result[0]
+			var expectsVersion = 2
+
+			g.Assert(v.MBR.Equals(&mbr.MBR{3, 3, 3, 3})).IsTrue()
+			g.Assert(v.Id).Equal(expectsVersion)
+		})
+	})
+}

@@ -24,7 +24,7 @@ func (kobj *KObj) String() string {
 }
 
 //Compare - cmp interface
-func kObjCmp(a interface{}, b interface{}) int {
+func kobjCmp(a interface{}, b interface{}) int {
 	var self, other = a.(*KObj), b.(*KObj)
 	var dx = self.Distance - other.Distance
 	var r = 1
