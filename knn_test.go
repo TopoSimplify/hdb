@@ -1,16 +1,16 @@
 package hdb
 
 import (
-	"testing"
-	"github.com/intdxdt/mbr"
-	"github.com/franela/goblin"
 	"github.com/TopoSimplify/node"
+	"github.com/franela/goblin"
+	"github.com/intdxdt/mbr"
+	"testing"
 	"time"
 )
 
 var knnData []node.Node
 
-func scoreFn(query *mbr.MBR, boxer  *KObj) float64 {
+func scoreFn(query *mbr.MBR, boxer *KObj) float64 {
 	return query.Distance(boxer.MBR)
 }
 
@@ -55,7 +55,7 @@ func TestRtreeKNN(t *testing.T) {
 		g.It("finds n neighbours", func() {
 			var rt = NewHdb(9)
 			rt.Load(knnData)
-			var  nn = rt.Knn(mbr.CreateMBR(40, 40, 40, 40), 10, scoreFn)
+			var nn = rt.Knn(mbr.CreateMBR(40, 40, 40, 40), 10, scoreFn)
 			var result = []mbr.MBR{
 				{38, 39, 39, 39}, {35, 39, 38, 40}, {34, 43, 36, 44},
 				{29, 42, 33, 42}, {48, 38, 48, 40}, {31, 47, 33, 50},
@@ -121,7 +121,7 @@ func fnRichData() []node.Node {
 		{3, 4, 3, 4}, {2.5, 4, 2.5, 4},
 	}
 	for i := range data {
-		richData = append(richData, node.Node{Id:i+1,MBR: data[i]})
+		richData = append(richData, node.Node{Id: i + 1, MBR: data[i]})
 	}
 	return richData
 }
@@ -131,8 +131,8 @@ func TestQobj_String(t *testing.T) {
 	g.Describe("", func() {
 		g.It("test qobject", func() {
 			var box = mbr.MBR{3, 3, 3, 3}
-			var obj = &node.Node{Id:id.Next(),MBR: box}
-			var nd  = newLeafNode(obj)
+			var obj = &node.Node{Id: id.Next(), MBR: box}
+			var nd = newLeafNode(obj)
 			var qo = &KObj{&nd, &box, true, 3.4}
 			g.Assert(box.String() + " -> 3.4").Equal(qo.String())
 		})

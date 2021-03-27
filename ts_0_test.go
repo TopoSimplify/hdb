@@ -1,14 +1,14 @@
 package hdb
 
 import (
-	"sort"
-	"testing"
-	"github.com/intdxdt/mbr"
-	"github.com/franela/goblin"
-	"time"
 	"github.com/TopoSimplify/node"
+	"github.com/franela/goblin"
 	"github.com/intdxdt/iter"
 	"github.com/intdxdt/math"
+	"github.com/intdxdt/mbr"
+	"sort"
+	"testing"
+	"time"
 )
 
 type Boxes []mbr.MBR
@@ -26,7 +26,7 @@ func (o Boxes) Swap(i, j int) {
 //Less sorts boxes lexicographically
 func (o Boxes) Less(i, j int) bool {
 	var d = o[i].MinX - o[j].MinX
-	if d == 0 || math.Abs(d) < math.EPSILON  {
+	if d == 0 || math.Abs(d) < math.EPSILON {
 		d = o[i].MinY - o[j].MinY
 	}
 	return d < 0
@@ -215,7 +215,7 @@ func TestRtreeRbush(t *testing.T) {
 		})
 
 		g.It("#insert adds an item to an existing tree correctly", func() {
-			var data = []mbr.MBR{{0, 0, 0, 0}, {2, 2, 2, 2}, {1, 1, 1, 1},}
+			var data = []mbr.MBR{{0, 0, 0, 0}, {2, 2, 2, 2}, {1, 1, 1, 1}}
 			var tree = NewHdb(4)
 			tree.loadBoxes(id, data)
 			tree.insert(&node.Node{Id: id.Next(), MBR: mbr.CreateMBR(3, 3, 3, 3)})
@@ -392,12 +392,12 @@ func TestRtreeUtil(t *testing.T) {
 		})
 
 		g.It("util max min", func() {
-				g.Assert(max(2.3, 4.5)).Equal(4.5)
-				g.Assert(max( 4.5, 2.3)).Equal(4.5)
-				g.Assert(min(2.3, 4.5)).Equal(2.3)
-				g.Assert(min( 4.5, 2.3)).Equal(2.3)
-				g.Assert(min( 4.50233, 4.50233)).Equal(4.50233)
-				g.Assert(max( 4.50233, 4.50233)).Equal(4.50233)
+			g.Assert(max(2.3, 4.5)).Equal(4.5)
+			g.Assert(max(4.5, 2.3)).Equal(4.5)
+			g.Assert(min(2.3, 4.5)).Equal(2.3)
+			g.Assert(min(4.5, 2.3)).Equal(2.3)
+			g.Assert(min(4.50233, 4.50233)).Equal(4.50233)
+			g.Assert(max(4.50233, 4.50233)).Equal(4.50233)
 		})
 	})
 }
